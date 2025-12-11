@@ -1,0 +1,29 @@
+//  Desciption : 페이지 별 설명 + 담당 
+    Author : 지현
+
+=====================================
+앱
+
+home.dart ->  메인+ 카테고리 화면 _혜전님 
+
+ligin_page.dart -> 로그인 페이지 _예은님
+sign_up.dart -> 회원가입 _ 예은님
+detail_page.dart -> 상세페이지 _ 예은님
+
+purchase_page -> 구매페이지_ 지현
+store_finder_page -> 대리점 검색 _ 지현
+
+profile_view_page -> 마이페이지 _ 진수님
+edit_profile_page.dart -> 프로필 수정 _ 진수님
+order_history_page -> 구매내역 _ 진수님
+payment_detail_page -> 결제내역상세 _진수님
+
+==========================================
+웹
+employee_login_  -> 직원로그인 
+employee_sing_up -> 직원회원가입
+inventory_inbound -> 입고
+purchase_order -> 발주
+sales -> 매출현황
+sign -> 결재
+stock -> 재고 현황
