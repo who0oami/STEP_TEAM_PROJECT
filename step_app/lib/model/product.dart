@@ -1,25 +1,28 @@
 class Product {
-  final int? product_id; // 제품 번호
-  final String product_name; // 제품명
-  final String product_color; // 제품 색상
-  final String product_size; // 제품 사이즈
+  final int? product_id; // 제품 번호_자동 증가 Primary Key
+  final String category_product_id; // 제품 카테고리 id
+  final String category_manufacturer_id; // 제조사 카테고리 id
+  final String category_product_size_id; // 사이즈 카테고리 id
+  final String category_color_id; // 색상 카테고리 id
   final double product_price; // 제품 가격
   final int product_quantity; // 제품 수량
 
   Product({
-    required this.product_id,
-    required this.product_name,
-    required this.product_color,
-    required this.product_size,
+    this.product_id,
+    required this.category_product_id,
+    required this.category_manufacturer_id,
+    required this.category_product_size_id,
+    required this.category_color_id,
     required this.product_price,
     required this.product_quantity,
   });
 
   Product.fromMap(Map<String, dynamic> res)
     : product_id = res['product_id'],
-      product_name = res['product_name'],
-      product_color = res['product_color'],
-      product_size = res['product_size'],
+      category_product_id = res['category_product_id'],
+      category_manufacturer_id = res['category_manufacturer_id'],
+      category_product_size_id = res['category_product_size_id'],
+      category_color_id = res['category_color_id'],
       product_price = res['product_price'],
       product_quantity = res['product_quantity'];
 }
