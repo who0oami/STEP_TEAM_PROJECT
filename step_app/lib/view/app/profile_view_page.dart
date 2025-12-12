@@ -14,15 +14,14 @@ class ProfileViewPage extends StatefulWidget {
 }
 
 class _ProfileViewPageState extends State<ProfileViewPage> {
-  late CustomerHandler handler;
+  late DatabaseHandlerCustomer handler; // ✅ 클래스명 수정
   Customer? _customer;
   File? profileImage;
 
   @override
   void initState() {
     super.initState();
-    handler =
-        CustomerHandler(); // DB 연결 객체 (handler 내부에서 DB 열도록 구현되어 있다고 가정)
+    handler = DatabaseHandlerCustomer(); // ✅ 올바른 클래스 사용
     loadCustomer();
   }
 
@@ -47,7 +46,9 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     }
 
     // 로그인 연동 후 사용할 DB 조회
-    Customer? data = await handler.getCustomer(widget.customerId!);
+    Customer? data = await handler.getCustomerById(
+      widget.customerId!,
+    ); // ✅ 메서드명 수정
     if (data != null) {
       setState(() {
         _customer = data;
@@ -101,16 +102,14 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildInfoRow(_customer!.customer_name),
-                        buildInfoRow(_customer!.customer_name),
+                        buildInfoRow(
+                          _customer!.customer_phone,
+                        ), // ✅ 중복된 name → phone
                         buildInfoRow(_customer!.customer_email),
                       ],
                     ),
                   ],
                 ),
-
-                // ----------------------------------------
-                // 프로필 정보 텍스트 영역
-                // ----------------------------------------
               ],
             ),
 
@@ -162,22 +161,9 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   Widget buildInfoRow(String value) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 2),
-      decoration: BoxDecoration(border: Border()),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 제목
-          //
-          SizedBox(height: 4),
-          // 값
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+      child: Text(
+        value,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
   }
