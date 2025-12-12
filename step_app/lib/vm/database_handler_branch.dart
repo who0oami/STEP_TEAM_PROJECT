@@ -51,7 +51,7 @@ class BranchHandler {
       [branch.branch_name, branch.branch_phone, branch.branch_lat, branch.branch_lng]
     );
     return result;
-  } // insertPlace
+  } // insertBranch
 
   // 검색 
   Future<List<Branch>> queryBranch() async {

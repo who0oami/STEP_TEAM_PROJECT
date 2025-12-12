@@ -20,7 +20,7 @@ class CategoryColorHandler {
           create table categorycolor
           (
             category_color_id integer primary key autoincrement,
-            branch_name category_color_name
+            category_color_name text
           )
           """
         );
