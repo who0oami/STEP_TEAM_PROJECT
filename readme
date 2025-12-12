@@ -9,6 +9,8 @@ home.dart ->  메인+ 카테고리 화면 _혜전님
 ligin_page.dart -> 로그인 페이지 _예은님
 sign_up.dart -> 회원가입 _ 예은님
 detail_page.dart -> 상세페이지 _ 예은님
+forgot_email_page.dart -> 이메일 찾기_ 예은님
+forgot_password_page.dart -> 비밀번호 찾기_예은님
 
 purchase_page -> 구매페이지_ 지현
 store_finder_page -> 대리점 검색 _ 지현

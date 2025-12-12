@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:step_app/view/app/store_finder_page.dart';
 /* 
 Description : 사용자 결제 화면
   - 1) 상세페이지에서 넘어온 상품 정보를 획득한다.
@@ -52,14 +54,16 @@ class _PurchasePageState extends State<PurchasePage> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.search)
+                      suffixIcon: IconButton(
+                        onPressed: () => Get.to(StoreFinderPage()),
+                         icon: Icon(Icons.search)
+                        ),
                     ),
                   ),
                 )
               ],
             ),
           ),
-      
         ],
       ),
     );
