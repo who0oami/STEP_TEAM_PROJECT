@@ -62,7 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     await handler.updateCustomer(updated);
-    if (mounted) Navigator.pop(context);
+    if (mounted) Navigator.pop(context, updated);
   }
 
   @override
@@ -108,7 +108,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
+                        color: Colors.black.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -192,7 +192,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       padding: EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
+          bottom: BorderSide(
+            color: const Color.fromARGB(
+              255,
+              247,
+              157,
+              157,
+            ).withValues(alpha: 0.3),
+          ),
         ),
       ),
       child: Row(

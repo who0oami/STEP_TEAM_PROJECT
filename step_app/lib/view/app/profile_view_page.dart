@@ -21,7 +21,8 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   @override
   void initState() {
     super.initState();
-    handler = CustomerHandler(); // DB 연결 객체
+    handler =
+        CustomerHandler(); // DB 연결 객체 (handler 내부에서 DB 열도록 구현되어 있다고 가정)
     loadCustomer();
   }
 
@@ -40,6 +41,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
         customer_address: "서울 강남구",
         customer_image: null,
       );
+      profileImage = null;
       setState(() {});
       return;
     }
@@ -49,6 +51,11 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     if (data != null) {
       setState(() {
         _customer = data;
+        profileImage =
+            (data.customer_image != null &&
+                data.customer_image!.isNotEmpty)
+            ? File(data.customer_image!)
+            : null;
       });
     }
   }
@@ -56,13 +63,13 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   @override
   Widget build(BuildContext context) {
     if (_customer == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("프로필"), centerTitle: true),
+      appBar: AppBar(title: const Text("프로필"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -80,7 +87,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                       ? FileImage(profileImage!)
                       : null,
                   child: profileImage == null
-                      ? Icon(
+                      ? const Icon(
                           Icons.person,
                           size: 50,
                           color: Colors.grey,
@@ -90,7 +97,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
               ],
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // ----------------------------------------
             // 프로필 정보 텍스트 영역
@@ -99,7 +106,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
             buildInfoRow("이름", _customer!.customer_name),
             buildInfoRow("이메일", _customer!.customer_email),
 
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             // ----------------------------------------
             // 프로필 편집 버튼
@@ -107,16 +114,32 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  // Edit 페이지로 이동하고, 수정된 Customer 객체를 반환받음
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) =>
                           EditProfilePage(customer: _customer!),
                     ),
-                  ).then((value) => loadCustomer()); // 수정 후 새로고침
+                  );
+
+                  // 반환값이 있으면 즉시 반영 (이름 / 이미지)
+                  if (result != null && result is Customer) {
+                    setState(() {
+                      _customer = result;
+                      profileImage =
+                          (result.customer_image != null &&
+                              result.customer_image!.isNotEmpty)
+                          ? File(result.customer_image!)
+                          : null;
+                    });
+                  } else {
+                    // 만약 Edit 페이지에서 DB에만 업데이트 했다면, 안전하게 DB에서 다시 불러오기
+                    await loadCustomer();
+                  }
                 },
-                child: Text("프로필 편집"),
+                child: const Text("프로필 편집"),
               ),
             ),
           ],
@@ -130,7 +153,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   // ------------------------------
   Widget buildInfoRow(String title, String value) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -145,17 +168,17 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
           // 제목
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           // 값
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),

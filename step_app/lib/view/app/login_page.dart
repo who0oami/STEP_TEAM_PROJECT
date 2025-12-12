@@ -44,21 +44,28 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text(
               'SMART TERMINAL FOR EVERY PURCHASE',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+              ),
             ),
             SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: emailcontroller,
-                decoration: InputDecoration(labelText: '이메일주소'),
+                decoration: InputDecoration(
+                  labelText: '이메일주소',
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: pwcontroller,
-                decoration: InputDecoration(labelText: '비밀번호'),
+                decoration: InputDecoration(
+                  labelText: '비밀번호',
+                ),
               ),
             ),
             SizedBox(height: 20),

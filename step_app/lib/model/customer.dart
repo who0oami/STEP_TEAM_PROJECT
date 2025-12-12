@@ -1,11 +1,13 @@
 class Customer {
-  final int? customer_id;
-  final String customer_name;
-  final String customer_phone;
-  final String customer_pw;
-  final String customer_email;
-  final String customer_address;
-  final String? customer_image;
+  int? customer_id;
+  String customer_name;
+  String customer_phone;
+  String customer_pw;
+  String customer_email;
+  String customer_address;
+  String? customer_image; // nullable 유지
+  double? customer_lat; // optional
+  double? customer_lng; // optional
 
   Customer({
     this.customer_id,
@@ -15,6 +17,8 @@ class Customer {
     required this.customer_email,
     required this.customer_address,
     this.customer_image,
+    this.customer_lat,
+    this.customer_lng,
   });
 
   factory Customer.fromMap(Map<String, dynamic> map) {
@@ -26,6 +30,8 @@ class Customer {
       customer_email: map['customer_email'],
       customer_address: map['customer_address'],
       customer_image: map['customer_image'],
+      customer_lat: map['customer_lat']?.toDouble(),
+      customer_lng: map['customer_lng']?.toDouble(),
     );
   }
 
@@ -38,6 +44,8 @@ class Customer {
       'customer_email': customer_email,
       'customer_address': customer_address,
       'customer_image': customer_image,
+      'customer_lat': customer_lat,
+      'customer_lng': customer_lng,
     };
   }
 }
