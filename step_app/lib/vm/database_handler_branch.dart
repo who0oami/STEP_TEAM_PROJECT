@@ -23,7 +23,7 @@ class BranchHandler {
           """
           create table branch
           (
-            seq integer primary key autoincrement,
+            branch_id integer primary key autoincrement,
             branch_name text,
             branch_phone text,
             branch_location text,
