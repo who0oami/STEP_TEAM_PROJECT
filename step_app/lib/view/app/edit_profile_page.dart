@@ -18,15 +18,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController profileNameController;
 
   bool _isPicking = false;
-  late CustomerHandler handler;
+  late DatabaseHandlerCustomer handler; // ✅ 클래스명 수정
 
   @override
   void initState() {
     super.initState();
-    handler = CustomerHandler();
+    handler = DatabaseHandlerCustomer(); // ✅ 인스턴스 생성 수정
     profileNameController = TextEditingController(
       text: widget.customer.customer_name,
     );
+  }
+
+  @override
+  void dispose() {
+    profileNameController.dispose(); // ✅ 메모리 관리
+    super.dispose();
   }
 
   Future<void> pickImage() async {
@@ -61,14 +67,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _profileImage?.path ?? widget.customer.customer_image,
     );
 
-    await handler.updateCustomer(updated);
+    await handler.updateCustomer(updated); // ✅ DB 핸들러 메서드 사용
     if (mounted) Navigator.pop(context, updated);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("프로필 관리"), leading: BackButton()),
+      appBar: AppBar(
+        title: const Text("프로필 관리"),
+        leading: const BackButton(),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -82,7 +91,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     backgroundColor: Colors.grey[300],
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
-                        : (widget.customer.customer_image != null
+                        : (widget.customer.customer_image != null &&
+                                  widget
+                                      .customer
+                                      .customer_image!
+                                      .isNotEmpty
                               ? FileImage(
                                   File(
                                     widget.customer.customer_image!,
@@ -91,8 +104,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               : null),
                     child:
                         _profileImage == null &&
-                            widget.customer.customer_image == null
-                        ? Icon(
+                            (widget.customer.customer_image == null ||
+                                widget
+                                    .customer
+                                    .customer_image!
+                                    .isEmpty)
+                        ? const Icon(
                             Icons.person,
                             size: 60,
                             color: Colors.grey,
@@ -102,16 +119,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   GestureDetector(
                     onTap: pickImage,
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 4),
-                      padding: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.7),
+                        color: Colors.black.withValues(
+                          alpha: 0.7,
+                        ), // ✅ withOpacity
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
+                      child: const Text(
                         "편집",
                         style: TextStyle(
                           color: Colors.white,
@@ -122,7 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               buildRow(
                 "프로필 이름",
@@ -132,21 +151,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: Text("프로필 이름 변경"),
+                      title: const Text("프로필 이름 변경"),
                       content: TextField(
                         controller: profileNameController,
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text("취소"),
+                          child: const Text("취소"),
                         ),
                         TextButton(
                           onPressed: () {
-                            setState(() {});
+                            setState(() {}); // ✅ UI 반영
                             Navigator.pop(context);
                           },
-                          child: Text("확인"),
+                          child: const Text("확인"),
                         ),
                       ],
                     ),
@@ -167,12 +186,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 null,
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _saveProfile,
-                  child: Text("저장하기"),
+                  child: const Text("저장하기"),
                 ),
               ),
             ],
@@ -189,7 +208,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     VoidCallback? onEdit,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -198,7 +217,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               247,
               157,
               157,
-            ).withValues(alpha: 0.3),
+            ).withValues(alpha: 0.3), // ✅ withOpacity
           ),
         ),
       ),
@@ -210,18 +229,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(value, style: TextStyle(fontSize: 16)),
+                const SizedBox(height: 4),
+                Text(value, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),
           if (editable)
-            OutlinedButton(onPressed: onEdit, child: Text("변경")),
+            OutlinedButton(
+              onPressed: onEdit,
+              child: const Text("변경"),
+            ),
         ],
       ),
     );
