@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_app/view/app/home.dart';
-import 'package:step_app/view/app/purchase_page.dart';
+
+import 'package:step_app/view/app/profile_view_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,10 +15,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-  
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const PurchasePage(),
+      home: ProfileViewPage(),
     );
   }
 }
