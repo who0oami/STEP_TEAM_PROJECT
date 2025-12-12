@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/get_utils/get_utils.dart';
+import 'package:step_app/util/message.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,6 +12,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   bool all = false;
   bool fourteen = false;
+  bool use = false;
   bool collect = false;
   bool marketing = false;
 
@@ -19,6 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController namecontroller;
   late TextEditingController phonecontroller;
 
+  final Message msg = Message();
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +32,16 @@ class _SignUpPageState extends State<SignUpPage> {
     pwcheckcontroller = TextEditingController();
     namecontroller = TextEditingController();
     phonecontroller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailcontroller.dispose();
+    pwcontroller.dispose();
+    pwcheckcontroller.dispose();
+    namecontroller.dispose();
+    phonecontroller.dispose();
+    super.dispose();
   }
 
   @override
@@ -92,7 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Row(
                 children: [
                   Checkbox(
-                    value: collect,
+                    value: use,
                     onChanged: (value) {
                       collect = value!;
                       setState(() {});
@@ -133,13 +148,84 @@ class _SignUpPageState extends State<SignUpPage> {
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //SizedBox(height: 30),
-                  ElevatedButton(onPressed: () {}, child: Text('가입하기')),
+                  ElevatedButton(
+                    onPressed: () {
+                      // _signUp();
+                    },
+                    child: Text('가입하기'),
+                  ),
                 ],
               ),
             ],
           ),
         ),
       ),
+    );
+  } //function
+
+  _toggleAll(bool? value) {
+    if (value != null) {
+      setState(() {
+        all = value;
+        fourteen = value;
+        use = value;
+        collect = value;
+        marketing = value;
+      });
+    }
+  }
+
+  _toggleIndividual(bool? value, String type) {
+    if (value != null) {
+      setState(() {
+        if (type == 'fourteen') fourteen = value;
+        if (type == 'use') use = value;
+        if (type == 'collect') collect = value;
+        if (type == 'marketing') marketing = value;
+
+        if (!value) {
+          all = false;
+        } else if (fourteen &&
+            use &&
+            collect &&
+            marketing) {
+          all = true;
+        }
+      });
+    }
+  }
+
+  _signUp() {
+    if (emailcontroller.text.isEmpty ||
+        pwcontroller.text.isEmpty ||
+        pwcheckcontroller.text.isEmpty ||
+        namecontroller.text.isEmpty ||
+        phonecontroller.text.isEmpty) {
+      msg.snackBar('필수 입력', '모든 입력란을 채워주세요.');
+      return;
+    }
+
+    if (!GetUtils.isEmail(emailcontroller.text)) {
+      msg.snackBar('이메일 형식 오류', '유효한 이메일 주소를 입력해주세요.');
+      return;
+    }
+
+    if (pwcontroller.text != pwcheckcontroller.text) {
+      msg.snackBar('비밀번호 오류', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+      return;
+    }
+
+    if (!fourteen || !use || !collect) {
+      msg.showDialog(
+        '필수 약관 동의 필요',
+        '만 14세 이상, 이용 약관, 개인정보 수집 및 이용 동의는 필수입니다.',
+      );
+      return;
+    }
+
+    msg.showDialog(
+      '회원가입 완료',
+      '${namecontroller.text}님, 회원가입을 축하드립니다!',
     );
   }
 }

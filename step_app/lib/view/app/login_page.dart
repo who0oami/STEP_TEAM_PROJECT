@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:step_app/view/app/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -63,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: pwcontroller,
+                //obscureText: true,
                 decoration: InputDecoration(
                   labelText: '비밀번호',
                 ),
@@ -78,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               onPressed: () {
-                //GET.TO(Page());
+                //checkLogin();
               },
               child: Text('로그인'),
             ),
@@ -86,7 +89,9 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Get.to(SignUpPage());
+                  },
                   child: Text('회원가입'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
@@ -94,7 +99,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Text('   |   '),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Get.to(FindEmailPage());
+                  },
                   child: Text('이메일 찾기'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
@@ -102,7 +109,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Text('   |   '),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Get.to(FindPasswordPage());
+                  },
                   child: Text('비밀번호 찾기'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
@@ -134,5 +143,39 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  } //function
+
+  checkLogin() {
+    if (emailcontroller.text.trim().isEmpty ||
+        pwcontroller.text.trim().isEmpty) {
+      Get.snackbar(
+        "로그인 실패",
+        "ID와 Password를 입력해주세요.",
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 2),
+      );
+    } else {
+      if (emailcontroller.text.trim() == 'root@naver.com' &&
+          pwcontroller.text.trim() == "1234") {
+        Get.defaultDialog(
+          title: '로그인 성공',
+          middleText: '환영합니다.',
+          barrierDismissible: false,
+          actions: [
+            TextButton(
+              onPressed: () => Get.to(Home()),
+              child: Text("확인"),
+            ),
+          ],
+        );
+      } else {
+        Get.snackbar(
+          "로그인 실패",
+          "ID와 Password를 확인해주세요.",
+          snackPosition: SnackPosition.TOP,
+          duration: Duration(seconds: 2),
+        );
+      }
+    }
   }
 }
