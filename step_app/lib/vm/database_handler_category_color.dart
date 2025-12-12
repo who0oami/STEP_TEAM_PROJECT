@@ -17,14 +17,10 @@ class CategoryColorHandler {
       onCreate: (db, version) async{
         await db.execute(
           """
-          create table branch
+          create table categorycolor
           (
-            seq integer primary key autoincrement,
-            branch_name text,
-            branch_phone text,
-            branch_location text,
-            branch_lat real,
-            branch_lat real
+            category_color_id integer primary key autoincrement,
+            branch_name category_color_name
           )
           """
         );
@@ -34,49 +30,49 @@ class CategoryColorHandler {
   } // initialDB
 
 // 입력
-  Future<int> insertBranch(Branch branch) async{
+  Future<int> insertCategorycolor(Category_color category_color) async{
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
       """
-      insert into branch
-      (branch_name, branch_phone, branch_location, branch_lat, branch_lat)
+      insert into categorycolor
+      (category_color_name)
       values
-      (?,?,?,?,?)
+      (?)
       """,
-      [branch.branch_name, branch.branch_phone, branch.branch_lat, branch.branch_lng]
+      [category_color.category_color_name]
     );
     return result;
-  } // insertPlace
+  } // insertCategorycolor
 
   // 검색 
-  Future<List<Branch>> queryBranch() async {
+  Future<List<Category_color>> queryCategorycolor() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult =
         await db.rawQuery('select * from branch');
-    return queryResult.map((e) => Branch.fromMap(e)).toList();
+    return queryResult.map((e) => Category_color.fromMap(e)).toList();
   } // queryBranch
 
   // 수정 
-  Future<int> updateBranch(Branch branch) async{
+  Future<int> updateCategorycolor(Category_color category_color) async{
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawUpdate(
       """
-      update branch
-      set branch_name = ?, branch_phone = ?, branch_location =?, branch_lat = ?, branch_lng = ?
-      where branch_id = ?
+      update categorycolor
+      set category_color_name = ?
+      where category_color_id = ?
       """,
-      [branch.branch_name, branch.branch_phone, branch.branch_location, branch.branch_lat, branch.branch_lng, branch.branch_id]
+      [category_color.category_color_name, category_color.category_color_id]
     );
 
     return result;
-  } // updateBranch
+  } // updateCategorycolor
 
   // 삭제
-  Future deleteBranch(int branch_id) async {
+  Future deleteCategorycolor(int category_color_id) async {
     final Database db = await initializeDB();
-    await db.rawDelete('delete from branch where branch_id = ?', [branch_id]);
-  } // deleteBranch
+    await db.rawDelete('delete from categorycolor where category_color_id = ?', [category_color_id]);
+  } // deleteCategorycolor
 
 } //class
