@@ -25,4 +25,4 @@ class Employee {
       employee_password = res['employee_password'],
       employee_role = res['employee_role'],
       employee_workplace = res['employee_workplace'];
-} 
+}
