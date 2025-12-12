@@ -51,7 +51,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     child: TextField(
                       controller: searchController,
                       decoration: InputDecoration(
-                        labelText: '검색어를 입력하세요',
+                        labelText: 'Search',
                         prefixIcon: Icon(Icons.search),
                         suffixIcon: IconButton(
                           icon: Icon(Icons.clear),
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     onPressed: () {
                       // Get.to(loginPage());
                     },
-                    icon: Icon(Icons.shopify, size: 28),
+                    icon: Icon(Icons.shopping_bag_outlined, size: 28),
                   ),
                   const SizedBox(width: 4),
                   // 두 번째 아이콘 (로그인)

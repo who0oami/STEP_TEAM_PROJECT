@@ -6,15 +6,15 @@ class ProductHandler {
   ProductHandler(this.db);
 
   // CREATE
-  Future<int> insertProduct(Product p) async =>
-      await db.insert('Product', {
-        'category_product_id': p.category_product_id,
-        'category_manufacturer_id': p.category_manufacturer_id,
-        'category_product_size_id': p.category_product_size_id,
-        'category_color_id': p.category_color_id,
-        'product_price': p.product_price,
-        'product_quantity': p.product_quantity,
-      });
+  Future<int> insertProduct(Product p) async => await db.insert('Product', {
+    'category_product_id': p.category_product_id,
+    'category_manufacturer_id': p.category_manufacturer_id,
+    'category_product_size_id': p.category_product_size_id,
+    'category_color_id': p.category_color_id,
+    'product_price': p.product_price,
+    'product_quantity': p.product_quantity,
+    'product_image': p.product_image,
+  });
 
   // READ ONE
   Future<Product?> getProduct(int id) async {
@@ -42,15 +42,13 @@ class ProductHandler {
       'category_color_id': p.category_color_id,
       'product_price': p.product_price,
       'product_quantity': p.product_quantity,
+      'product_image': p.product_image,
     },
     where: 'product_id=?',
     whereArgs: [p.product_id],
   );
 
   // DELETE
-  Future<int> deleteProduct(int id) async => await db.delete(
-    'Product',
-    where: 'product_id=?',
-    whereArgs: [id],
-  );
+  Future<int> deleteProduct(int id) async =>
+      await db.delete('Product', where: 'product_id=?', whereArgs: [id]);
 }
