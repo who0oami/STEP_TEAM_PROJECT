@@ -7,7 +7,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage햣> {
+class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailcontroller;
   late TextEditingController pwcontroller;
 
@@ -37,7 +37,10 @@ class _LoginPageState extends State<LoginPage햣> {
             SizedBox(height: 50),
             Text(
               'STEP',
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               'SMART TERMINAL FOR EVERY PURCHASE',
@@ -78,19 +81,25 @@ class _LoginPageState extends State<LoginPage햣> {
                 TextButton(
                   onPressed: () {},
                   child: Text('회원가입'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
                 ),
                 Text('   |   '),
                 TextButton(
                   onPressed: () {},
                   child: Text('이메일 찾기'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
                 ),
                 Text('   |   '),
                 TextButton(
                   onPressed: () {},
                   child: Text('비밀번호 찾기'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -101,12 +110,16 @@ class _LoginPageState extends State<LoginPage햣> {
                 TextButton(
                   onPressed: () {},
                   child: Text('이용약관'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
                 ),
                 TextButton(
                   onPressed: () {},
                   child: Text('개인정보 처리방침'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
                 ),
               ],
             ),

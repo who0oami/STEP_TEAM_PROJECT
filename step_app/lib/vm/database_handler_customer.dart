@@ -1,49 +1,57 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 import 'package:step_app/model/customer.dart';
 
 class CustomerHandler {
-  final Database db;
-  CustomerHandler(this.db);
+  // DB 연결
+  static Future<Database> initDB() async {
+    String path = join(await getDatabasesPath(), "step_app.db");
 
-  Future<int> insertCustomer(Customer c) async =>
-      await db.insert('Customer', {
-        'customer_name': c.customer_name,
-        'customer_phone': c.customer_phone,
-        'customer_pw': c.customer_pw,
-        'customer_email': c.customer_email,
-        'customer_address': c.customer_address,
-      });
+    return openDatabase(path, version: 1);
+  }
+
+  Future<int> insertCustomer(Customer c) async {
+    final db = await CustomerHandler.initDB();
+    return await db.insert('Customer', c.toMap());
+  }
 
   Future<Customer?> getCustomer(int id) async {
+    final db = await CustomerHandler.initDB();
+
     final maps = await db.query(
       'Customer',
-      where: 'customer_id=?',
+      where: 'customer_id = ?',
       whereArgs: [id],
     );
+
     return maps.isNotEmpty ? Customer.fromMap(maps.first) : null;
   }
 
   Future<List<Customer>> getAllCustomers() async {
+    final db = await CustomerHandler.initDB();
+
     final maps = await db.query('Customer');
-    return maps.map((m) => Customer.fromMap(m)).toList();
+    return maps.map((e) => Customer.fromMap(e)).toList();
   }
 
-  Future<int> updateCustomer(Customer c) async => await db.update(
-    'Customer',
-    {
-      'customer_name': c.customer_name,
-      'customer_phone': c.customer_phone,
-      'customer_pw': c.customer_pw,
-      'customer_email': c.customer_email,
-      'customer_address': c.customer_address,
-    },
-    where: 'customer_id=?',
-    whereArgs: [c.customer_id],
-  );
+  Future<int> updateCustomer(Customer c) async {
+    final db = await CustomerHandler.initDB();
 
-  Future<int> deleteCustomer(int id) async => await db.delete(
-    'Customer',
-    where: 'customer_id=?',
-    whereArgs: [id],
-  );
+    return await db.update(
+      'Customer',
+      c.toMap(),
+      where: 'customer_id = ?',
+      whereArgs: [c.customer_id],
+    );
+  }
+
+  Future<int> deleteCustomer(int id) async {
+    final db = await CustomerHandler.initDB();
+
+    return await db.delete(
+      'Customer',
+      where: 'customer_id = ?',
+      whereArgs: [id],
+    );
+  }
 }

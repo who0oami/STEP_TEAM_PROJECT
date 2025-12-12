@@ -1,10 +1,11 @@
 class Customer {
-  int? customer_id;
-  String customer_name;
-  String customer_phone;
-  String customer_pw;
-  String customer_email;
-  String customer_address;
+  final int? customer_id;
+  final String customer_name;
+  final String customer_phone;
+  final String customer_pw;
+  final String customer_email;
+  final String customer_address;
+  final String? customer_image;
 
   Customer({
     this.customer_id,
@@ -13,14 +14,30 @@ class Customer {
     required this.customer_pw,
     required this.customer_email,
     required this.customer_address,
+    this.customer_image,
   });
 
-  Customer.fromMap(Map<String, dynamic> res)
-    : customer_id = res['customer_id'],
-      customer_name = res['customer_name'],
-      customer_phone = res['customer_phone'],
-      customer_pw = res['customer_pw'],
-      customer_email = res['customer_email'],
-      customer_address = res['customer_address'];
-}
+  factory Customer.fromMap(Map<String, dynamic> map) {
+    return Customer(
+      customer_id: map['customer_id'],
+      customer_name: map['customer_name'],
+      customer_phone: map['customer_phone'],
+      customer_pw: map['customer_pw'],
+      customer_email: map['customer_email'],
+      customer_address: map['customer_address'],
+      customer_image: map['customer_image'],
+    );
+  }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'customer_id': customer_id,
+      'customer_name': customer_name,
+      'customer_phone': customer_phone,
+      'customer_pw': customer_pw,
+      'customer_email': customer_email,
+      'customer_address': customer_address,
+      'customer_image': customer_image,
+    };
+  }
+}
