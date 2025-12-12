@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_app/view/app/forgot_email_page.dart';
+import 'package:step_app/view/app/forgot_password_page.dart';
 import 'package:step_app/view/app/home.dart';
+import 'package:step_app/view/app/sign_up_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -81,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               onPressed: () {
-                //checkLogin();
+                checkLogin();
               },
               child: Text('로그인'),
             ),
@@ -90,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 TextButton(
                   onPressed: () {
-                    // Get.to(SignUpPage());
+                    Get.to(SignUpPage());
                   },
                   child: Text('회원가입'),
                   style: TextButton.styleFrom(
@@ -100,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text('   |   '),
                 TextButton(
                   onPressed: () {
-                    // Get.to(FindEmailPage());
+                    Get.to((ForgotEmailPage));
                   },
                   child: Text('이메일 찾기'),
                   style: TextButton.styleFrom(
@@ -110,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text('   |   '),
                 TextButton(
                   onPressed: () {
-                    // Get.to(FindPasswordPage());
+                    Get.to(ForgotPasswordPage());
                   },
                   child: Text('비밀번호 찾기'),
                   style: TextButton.styleFrom(
