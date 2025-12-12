@@ -97,7 +97,7 @@ class _DetailPageState extends State<DetailPage>
           children: [
             SizedBox(height: 40),
             Image.asset(
-              'images/pig.png',
+              'images/model.png',
               height: 250,
               fit: BoxFit.cover,
             ),
