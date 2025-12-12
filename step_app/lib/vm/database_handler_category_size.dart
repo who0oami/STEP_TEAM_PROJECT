@@ -30,7 +30,7 @@ class CategorySizeHandler {
   } // initialDB
 
 // 입력
-  Future<int> insertBranch(Category_size category_size) async{
+  Future<int> insertCategorySize(Category_size category_size) async{
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
@@ -43,18 +43,18 @@ class CategorySizeHandler {
       [category_size.category_size_name]
     );
     return result;
-  } // insertCategoryProduct
+  } // insertCategorySize
 
   // 검색 
-  Future<List<Category_size>> queryCategoryProduct() async {
+  Future<List<Category_size>> queryCategorySize() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult =
-        await db.rawQuery('select * from categoryproduct');
+        await db.rawQuery('select * from categorysize');
     return queryResult.map((e) => Category_size.fromMap(e)).toList();
-  } // queryCategoryProduct
+  } // queryCategorySize
 
   // 수정 
-  Future<int> updateCategoryProduct(Category_size category_size) async{
+  Future<int> updateCategorySize(Category_size category_size) async{
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawUpdate(
@@ -67,12 +67,12 @@ class CategorySizeHandler {
     );
 
     return result;
-  } // updateCategoryProduct
+  } // updateCategorySize
 
   // 삭제
-  Future deleteCategoryProduct(int category_product_id) async {
+  Future deleteCategorySize(int category_size_id) async {
     final Database db = await initializeDB();
-    await db.rawDelete('delete from categorysize where category_product_id = ?', [category_product_id]);
-  } // deleteCategoryProduct
+    await db.rawDelete('delete from categorysize where category_size_id = ?', [category_size_id]);
+  } // deleteCategorySize
 
 } //class
