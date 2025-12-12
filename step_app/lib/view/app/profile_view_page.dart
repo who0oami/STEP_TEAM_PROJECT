@@ -78,35 +78,43 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
             // ----------------------------------------
             // 프로필 이미지 + 왼쪽 위에 배치
             // ----------------------------------------
-            Row(
+            Column(
               children: [
-                CircleAvatar(
-                  radius: 45,
-                  backgroundColor: Colors.grey[300],
-                  backgroundImage: profileImage != null
-                      ? FileImage(profileImage!)
-                      : null,
-                  child: profileImage == null
-                      ? const Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.grey,
-                        )
-                      : null,
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: profileImage != null
+                          ? FileImage(profileImage!)
+                          : null,
+                      child: profileImage == null
+                          ? const Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.grey,
+                            )
+                          : null,
+                    ),
+                    SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildInfoRow(_customer!.customer_name),
+                        buildInfoRow(_customer!.customer_name),
+                        buildInfoRow(_customer!.customer_email),
+                      ],
+                    ),
+                  ],
                 ),
+
+                // ----------------------------------------
+                // 프로필 정보 텍스트 영역
+                // ----------------------------------------
               ],
             ),
 
-            const SizedBox(height: 30),
-
-            // ----------------------------------------
-            // 프로필 정보 텍스트 영역
-            // ----------------------------------------
-            buildInfoRow("프로필 이름", _customer!.customer_name),
-            buildInfoRow("이름", _customer!.customer_name),
-            buildInfoRow("이메일", _customer!.customer_email),
-
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
 
             // ----------------------------------------
             // 프로필 편집 버튼
@@ -151,34 +159,20 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   // ------------------------------
   // 표시용 Row
   // ------------------------------
-  Widget buildInfoRow(String title, String value) {
+  Widget buildInfoRow(String value) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-      ),
+      padding: EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(border: Border()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 제목
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 4),
+          //
+          SizedBox(height: 4),
           // 값
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
