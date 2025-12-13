@@ -1,178 +1,177 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:step_app/model/customer.dart';
-import 'package:step_app/vm/database_handler_customer.dart';
 
 class EditProfilePage extends StatefulWidget {
-  final Customer customer;
-
   const EditProfilePage({super.key, required this.customer});
+
+  final Customer customer;
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  File? _profileImage;
-  late TextEditingController profileNameController;
-
-  bool _isPicking = false;
-  late CustomerHandler handler;
+  late Customer _edited;
+  File? _profileImageFile;
 
   @override
   void initState() {
     super.initState();
-    handler = CustomerHandler();
-    profileNameController = TextEditingController(
-      text: widget.customer.customer_name,
-    );
+    _edited = widget.customer;
+
+    final path = _edited.customer_image;
+    _profileImageFile = (path != null && path.isNotEmpty)
+        ? File(path)
+        : null;
   }
 
-  Future<void> pickImage() async {
-    if (_isPicking) return;
-    _isPicking = true;
-
-    try {
-      final picker = ImagePicker();
-      final result = await picker.pickImage(
-        source: ImageSource.gallery,
+  void _setName(String newName) {
+    setState(() {
+      _edited = Customer(
+        customer_id: _edited.customer_id,
+        customer_name: newName,
+        customer_phone: _edited.customer_phone,
+        customer_pw: _edited.customer_pw,
+        customer_email: _edited.customer_email,
+        customer_address: _edited.customer_address,
+        customer_image: _edited.customer_image,
       );
+    });
+  }
 
-      if (result != null) {
-        setState(() {
-          _profileImage = File(result.path);
-        });
-      }
-    } finally {
-      _isPicking = false;
+  Future<void> _showChangeNameDialog() async {
+    final controller = TextEditingController(
+      text: _edited.customer_name,
+    );
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('이름 변경'),
+          content: SingleChildScrollView(
+            child: TextField(
+              controller: controller,
+              autofocus: false, //  다이얼로그 뜰 때 키보드 자동으로 안 올라옴
+              decoration: const InputDecoration(hintText: '새 이름 입력'),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  Navigator.pop(context, controller.text.trim()),
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null && result.isNotEmpty) {
+      _setName(result);
     }
   }
 
-  Future<void> _saveProfile() async {
-    Customer updated = Customer(
-      customer_id: widget.customer.customer_id,
-      customer_name: profileNameController.text.trim(),
-      customer_phone: widget.customer.customer_phone,
-      customer_pw: widget.customer.customer_pw,
-      customer_email: widget.customer.customer_email,
-      customer_address: widget.customer.customer_address,
-      customer_image:
-          _profileImage?.path ?? widget.customer.customer_image,
-    );
-
-    await handler.updateCustomer(updated);
-    if (mounted) Navigator.pop(context, updated);
+  void _saveAndClose() {
+    //  ProfileViewPage로 수정된 customer 반환
+    Navigator.pop(context, _edited);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("프로필 관리"), leading: BackButton()),
-      body: SingleChildScrollView(
+      resizeToAvoidBottomInset: true, // 키보드 올라올 때 레이아웃 밀기
+      appBar: AppBar(title: const Text('프로필 편집'), centerTitle: true),
+      body: GestureDetector(
+        onTap: () =>
+            FocusScope.of(context).unfocus(), // 빈 곳 누르면 키보드 내리기
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                alignment: Alignment.bottomCenter,
+              // =========================
+              // 프로필 이미지
+              // =========================
+              Row(
                 children: [
                   CircleAvatar(
-                    radius: 50,
+                    radius: 45,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : (widget.customer.customer_image != null
-                              ? FileImage(
-                                  File(
-                                    widget.customer.customer_image!,
-                                  ),
-                                )
-                              : null),
-                    child:
-                        _profileImage == null &&
-                            widget.customer.customer_image == null
-                        ? Icon(
+                    backgroundImage: _profileImageFile != null
+                        ? FileImage(_profileImageFile!)
+                        : null,
+                    child: _profileImageFile == null
+                        ? const Icon(
                             Icons.person,
-                            size: 60,
+                            size: 45,
                             color: Colors.grey,
                           )
                         : null,
                   ),
-                  GestureDetector(
-                    onTap: pickImage,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 4),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        "편집",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _edited.customer_name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 6),
+                        Text(_edited.customer_email),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 30),
 
-              buildRow(
-                "프로필 이름",
-                profileNameController.text,
-                true,
-                () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: Text("프로필 이름 변경"),
-                      content: TextField(
-                        controller: profileNameController,
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text("취소"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {});
-                            Navigator.pop(context);
-                          },
-                          child: Text("확인"),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+              const SizedBox(height: 24),
 
-              buildRow(
-                "이름",
-                widget.customer.customer_name,
-                false,
-                null,
-              ),
-              buildRow(
-                "이메일",
-                widget.customer.customer_email,
-                false,
-                null,
-              ),
-
-              SizedBox(height: 30),
+              // =========================
+              // 이름 변경 버튼 (AlertDialog)
+              // =========================
               SizedBox(
                 width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: _showChangeNameDialog,
+                  child: const Text('프로필이름 변경'),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+
+              // =========================
+              // (표시용) 기타 정보
+              // =========================
+              _infoLine('전화번호', _edited.customer_phone),
+              const SizedBox(height: 10),
+              _infoLine('이메일', _edited.customer_email),
+              const SizedBox(height: 10),
+              _infoLine('주소', _edited.customer_address),
+
+              const Spacer(),
+
+              // =========================
+              // 저장 버튼
+              // =========================
+              SizedBox(
+                width: double.infinity,
+                height: 48,
                 child: ElevatedButton(
-                  onPressed: _saveProfile,
-                  child: Text("저장하기"),
+                  onPressed: _saveAndClose,
+                  child: const Text('저장'),
                 ),
               ),
             ],
@@ -182,48 +181,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildRow(
-    String title,
-    String value,
-    bool editable,
-    VoidCallback? onEdit,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: const Color.fromARGB(
-              255,
-              247,
-              157,
-              157,
-            ).withValues(alpha: 0.3),
+  Widget _infoLine(String title, String value) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 70,
+          child: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(value, style: TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-          if (editable)
-            OutlinedButton(onPressed: onEdit, child: Text("변경")),
-        ],
-      ),
+        Expanded(child: Text(value)),
+      ],
     );
   }
 }
