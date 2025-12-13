@@ -123,8 +123,9 @@ class DatabaseHandlerProduct {
   // =====================
   Future<int> deleteProduct(int product_id) async {
     final db = await initializedDB();
-    return await db.rawDelete('delete from product where product_id = ?', [
-      product_id,
-    ]);
+    return await db.rawDelete(
+      'delete from product where product_id = ?',
+      [product_id],
+    );
   }
 }

@@ -8,11 +8,11 @@ import 'package:step_app/model/customer.dart';
 import 'package:step_app/util/message.dart';
 import 'package:step_app/util/scolor.dart';
 import 'package:step_app/view/app/edit_profile_page.dart';
-import 'package:step_app/view/app/order_history_page.dart'; // PurchaseListItem 타입
+import 'package:step_app/view/app/order_history_page.dart';
 
 class ProfileViewPage extends StatefulWidget {
   final int? customerId;
-  const ProfileViewPage({super.key, this.customerId});
+  ProfileViewPage({super.key, this.customerId});
 
   @override
   State<ProfileViewPage> createState() => _ProfileViewPageState();
@@ -21,31 +21,41 @@ class ProfileViewPage extends StatefulWidget {
 class _ProfileViewPageState extends State<ProfileViewPage> {
   final Message _msg = Message();
 
-  // ✅ 더미 프로필 (편집 후 setState로 바뀌게 final 제거)
   File? profileImage;
   String name = '홍길동';
   String profileName = 'taxol';
   String email = 'test@example.com';
 
-  // ✅ EditProfilePage에 넘길 Customer 상태
   Customer? customer;
 
   @override
   void initState() {
     super.initState();
+
+    // 지금은 더미. 내일 DB 붙이면 여기만 바꿔도 됨
     customer = Customer(
       customer_id: widget.customerId ?? 1,
-      customer_name: profileName, // Edit 페이지에서 '프로필이름 변경'으로 바뀌는 값
+      customer_name: profileName,
       customer_phone: '010-1234-5678',
       customer_pw: '1234',
       customer_email: email,
       customer_address: '서울 강남구 테헤란로 123',
-      customer_image: null, // 이미지 파일 경로 없으면 null
+      customer_image: null,
+      customer_lat: null,
+      customer_lng: null,
     );
 
-    // (선택) 화면에 보여주는 변수들도 customer랑 동기화
-    profileName = customer!.customer_name;
-    email = customer!.customer_email;
+    _applyCustomerToView(customer!);
+  }
+
+  void _applyCustomerToView(Customer c) {
+    profileName = c.customer_name;
+    email = c.customer_email;
+
+    final path = c.customer_image;
+    profileImage = (path != null && path.isNotEmpty)
+        ? File(path)
+        : null;
   }
 
   @override
@@ -53,7 +63,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     return Scaffold(
       backgroundColor: PColor.baseBackgroundColor,
       appBar: AppBar(
-        title: const Text("프로필"),
+        title: Text("마이 페이지"),
         centerTitle: true,
         backgroundColor: PColor.appBarBackgroundColor,
         foregroundColor: PColor.appBarForegroundColor,
@@ -62,7 +72,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -75,14 +85,14 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                         ? FileImage(profileImage!)
                         : null,
                     child: profileImage == null
-                        ? const Icon(
+                        ? Icon(
                             Icons.person,
                             size: 50,
                             color: Colors.grey,
                           )
                         : null,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -93,14 +103,14 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               SizedBox(
                 width: double.infinity,
                 height: 44,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: PColor.buttonGray,
+                    backgroundColor: PColor.buttonPrimary,
                     foregroundColor: PColor.appBarForegroundColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -113,7 +123,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                       return;
                     }
 
-                    // ✅ 편집 페이지로 이동 + 수정된 Customer 받기
                     final result = await Get.to<Customer>(
                       () => EditProfilePage(customer: customer!),
                     );
@@ -121,27 +130,20 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                     if (result != null) {
                       setState(() {
                         customer = result;
-
-                        // ✅ 화면 표시값 갱신
-                        profileName = result.customer_name;
-                        email = result.customer_email;
-
-                        final path = result.customer_image;
-                        profileImage =
-                            (path != null && path.isNotEmpty)
-                            ? File(path)
-                            : null;
+                        _applyCustomerToView(result);
                       });
                       _msg.snackBar('완료', '프로필이 저장되었습니다.');
                     }
                   },
-                  child: const Text("프로필 편집"),
+                  child: Text(
+                    "프로필 편집",
+                    style: TextStyle(color: PColor.buttonTextColor),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 16),
-
-              const Expanded(child: PurchaseListSection()),
+              SizedBox(height: 16),
+              Expanded(child: PurchaseListSection()),
             ],
           ),
         ),
@@ -151,20 +153,17 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
 
   Widget _infoText(String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: EdgeInsets.symmetric(vertical: 2),
       child: Text(
         value,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
   }
 }
 
 class PurchaseListSection extends StatefulWidget {
-  const PurchaseListSection({super.key});
+  PurchaseListSection({super.key});
 
   @override
   State<PurchaseListSection> createState() =>
@@ -183,13 +182,15 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
   @override
   void initState() {
     super.initState();
+
+    // 더미. 내일 DB 붙이면 여기만 교체하면 됨
     _items = <PurchaseListItem>[
       PurchaseListItem(
         orderId: 1,
         imageBytes: Uint8List(0),
         productName: '에어줌 페가수스',
         brandName: 'NIKE',
-        branchName: '강남구 대리점',
+        branchName: '강남구 지점',
         sizeText: '270',
         pickupStatus: 0,
       ),
@@ -198,7 +199,7 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
         imageBytes: Uint8List(0),
         productName: '슈퍼스타',
         brandName: 'ADIDAS',
-        branchName: '서초구 대리점',
+        branchName: '서초구 지점',
         sizeText: '265',
         pickupStatus: 1,
       ),
@@ -224,14 +225,14 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
       children: [
         Row(
           children: [
-            const Text(
+            Text(
               '구매 내역',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const Spacer(),
+            Spacer(),
             SizedBox(
               width: 260,
               height: 38,
@@ -241,11 +242,11 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                 decoration: InputDecoration(
                   hintText: '제품명 검색',
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
+                  contentPadding: EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 10,
                   ),
-                  prefixIcon: const Icon(Icons.search, size: 18),
+                  prefixIcon: Icon(Icons.search, size: 18),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -254,14 +255,13 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Expanded(
           child: filtered.isEmpty
-              ? const Center(child: Text('검색 결과가 없습니다.'))
+              ? Center(child: Text('검색 결과가 없습니다.'))
               : ListView.separated(
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: 12),
+                  separatorBuilder: (_, __) => SizedBox(height: 12),
                   itemBuilder: (context, index) =>
                       _buildPurchaseCard(filtered[index]),
                 ),
@@ -288,10 +288,10 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
       },
       borderRadius: BorderRadius.circular(14),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          color: const Color(0xFFF6F6F6),
+          color: Color(0xFFF6F6F6),
         ),
         child: Row(
           children: [
@@ -302,8 +302,8 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                       width: 72,
                       height: 72,
                       alignment: Alignment.center,
-                      color: const Color(0xFFEAEAEA),
-                      child: const Icon(Icons.image_not_supported),
+                      color: Color(0xFFEAEAEA),
+                      child: Icon(Icons.image_not_supported),
                     )
                   : Image.memory(
                       item.imageBytes,
@@ -312,7 +312,7 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                       fit: BoxFit.cover,
                     ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,30 +321,30 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                     item.productName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     '브랜드: ${item.brandName}',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '대리점: ${item.branchName}',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     'SIZE: ${item.sizeText}',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             Text(
               isWaiting ? '픽업대기중' : '픽업완료',
               style: TextStyle(

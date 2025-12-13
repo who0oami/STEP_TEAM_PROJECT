@@ -1,8 +1,10 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PaymentDetailPage extends StatefulWidget {
-  const PaymentDetailPage({
+  PaymentDetailPage({
     super.key,
     required this.paymentNo,
     required this.orderNo,
@@ -15,17 +17,17 @@ class PaymentDetailPage extends StatefulWidget {
     required this.transactionAtText,
   });
 
-  final String paymentNo; // 결제번호
-  final String orderNo; // 주문번호
+  final String paymentNo;
+  final String orderNo;
   final Uint8List imageBytes;
 
-  final String productTitle; // 제품명
-  final String optionLine; // 옵션/모델/브랜드 등
-  final String sizeLine; // 예: "280 SIZE  /  픽업완료"
+  final String productTitle;
+  final String optionLine;
+  final String sizeLine;
 
-  final int initialAmountWon; // 최초 결제금액
-  final int totalProductWon; // 총 구매가
-  final String transactionAtText; // 거래 일시
+  final int initialAmountWon;
+  final int totalProductWon;
+  final String transactionAtText;
 
   @override
   State<PaymentDetailPage> createState() => _PaymentDetailPageState();
@@ -39,24 +41,27 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('결제 내역 상세'),
+        title: Text('결제 내역 상세'),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // 결제번호
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
               ),
@@ -64,7 +69,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 children: [
                   Text(
                     '결제번호 >  ${w.paymentNo}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: Colors.black87,
@@ -74,15 +79,14 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               ),
             ),
 
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // 상품 요약
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,
               ),
@@ -90,7 +94,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _thumb(w.imageBytes),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: _productInfo(
                       orderNo: w.orderNo,
@@ -99,14 +103,12 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       sizeLine: w.sizeLine,
                     ),
                   ),
-                  const SizedBox(width: 10),
-
-                  // ✅ 픽업완료 + >
+                  SizedBox(width: 10),
                   InkWell(
                     onTap: () {},
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Text(
                           '픽업완료',
                           style: TextStyle(
@@ -128,21 +130,20 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               ),
             ),
 
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // 최초 결제금액
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 18,
               ),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     '최초 결제금액',
                     style: TextStyle(
                       fontSize: 16,
@@ -150,10 +151,10 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       color: Colors.black87,
                     ),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Text(
                     '${_won(w.initialAmountWon)}원',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
                       color: Colors.black87,
@@ -163,15 +164,14 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               ),
             ),
 
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // ✅ 총 구매가만 남김
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
@@ -181,21 +181,20 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               ),
             ),
 
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // 거래 일시
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     '거래 일시',
                     style: TextStyle(
                       fontSize: 12,
@@ -203,10 +202,10 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       color: Colors.black87,
                     ),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Text(
                     w.transactionAtText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
                       color: Colors.black87,
@@ -216,28 +215,41 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               ),
             ),
 
-            const Divider(
+            Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
 
-            // ✅ 결제정보 (안내문 한 줄)
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    '결제정보',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black87,
-                    ),
+                children: [
+                  //  결제정보/카카오페이  정렬
+                  Row(
+                    children: [
+                      Text(
+                        '결제정보',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        '카카오페이',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -249,15 +261,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       height: 1.4,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    '카카오페이',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black87,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -267,8 +270,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     );
   }
 
-  // ---------- UI helpers ----------
-
   Widget _thumb(Uint8List bytes) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
@@ -276,9 +277,9 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
           ? Container(
               width: 64,
               height: 64,
-              color: const Color(0xFFEDEDED),
+              color: Color(0xFFEDEDED),
               alignment: Alignment.center,
-              child: const Icon(Icons.image_not_supported, size: 22),
+              child: Icon(Icons.image_not_supported, size: 22),
             )
           : Image.memory(
               bytes,
@@ -300,34 +301,34 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
       children: [
         Text(
           '주문번호 $orderNo',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
             color: Colors.black45,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w800,
             color: Colors.black87,
           ),
         ),
-        const SizedBox(height: 2),
+        SizedBox(height: 2),
         Text(
           option,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
             color: Colors.black45,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Text(
           sizeLine,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w800,
             color: Colors.black87,
@@ -342,16 +343,16 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
       children: [
         Text(
           left,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
             color: Colors.black87,
           ),
         ),
-        const Spacer(),
+        Spacer(),
         Text(
           right,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
             color: Colors.black87,

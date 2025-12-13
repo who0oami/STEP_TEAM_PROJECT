@@ -9,8 +9,7 @@ class ForgotPasswordPage extends StatefulWidget {
       _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState
-    extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   late TextEditingController controller;
   //bool isButtonEnabled = false;
   //final Message msg = Message();

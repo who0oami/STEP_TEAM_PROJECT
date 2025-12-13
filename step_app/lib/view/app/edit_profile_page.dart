@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:step_app/model/customer.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key, required this.customer});
+  EditProfilePage({super.key, required this.customer});
 
   final Customer customer;
 
@@ -20,6 +21,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final ImagePicker _picker = ImagePicker();
 
+  // image picker 두 번 연속 실행 방지(already_active 방지)
+  bool _isPickingImage = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,26 +35,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
         : null;
   }
 
-  Future<void> _pickProfileImage() async {
-    final XFile? picked = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
+  // Customer에서 필요한 값만 바꿔서 새로 만들기
+  Customer _copyCustomer({
+    String? customerName,
+    String? customerImage,
+  }) {
+    return Customer(
+      customer_id: _edited.customer_id,
+      customer_name: customerName ?? _edited.customer_name,
+      customer_phone: _edited.customer_phone,
+      customer_pw: _edited.customer_pw,
+      customer_email: _edited.customer_email,
+      customer_address: _edited.customer_address,
+      customer_image: customerImage ?? _edited.customer_image,
+      customer_lat: _edited.customer_lat,
+      customer_lng: _edited.customer_lng,
     );
-    if (picked == null) return;
+  }
 
-    setState(() {
-      _profileImageFile = File(picked.path);
+  Future<void> _pickProfileImage() async {
+    if (_isPickingImage) return;
+    _isPickingImage = true;
 
-      _edited = Customer(
-        customer_id: _edited.customer_id,
-        customer_name: _edited.customer_name,
-        customer_phone: _edited.customer_phone,
-        customer_pw: _edited.customer_pw,
-        customer_email: _edited.customer_email,
-        customer_address: _edited.customer_address,
-        customer_image: picked.path, // ✅ 선택한 이미지 경로 저장
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
       );
-    });
+      if (picked == null) return;
+
+      setState(() {
+        _profileImageFile = File(picked.path);
+        _edited = _copyCustomer(customerImage: picked.path);
+      });
+    } finally {
+      _isPickingImage = false;
+    }
   }
 
   Future<void> _showChangeProfileNameDialog() async {
@@ -58,71 +78,57 @@ class _EditProfilePageState extends State<EditProfilePage> {
       text: _edited.customer_name,
     );
 
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('프로필 이름 변경'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: '새 프로필 이름 입력',
-            ),
+    final result = await Get.dialog<String>(
+      AlertDialog(
+        title: Text('프로필 이름 변경'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(hintText: '새 프로필 이름 입력'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: null),
+            child: Text('취소'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, null),
-              child: const Text('취소'),
-            ),
-            ElevatedButton(
-              onPressed: () =>
-                  Navigator.pop(context, controller.text.trim()),
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
+          ElevatedButton(
+            onPressed: () => Get.back(result: controller.text.trim()),
+            child: Text('확인'),
+          ),
+        ],
+      ),
+      barrierDismissible: true,
     );
 
     if (result == null || result.isEmpty) return;
 
     setState(() {
-      _edited = Customer(
-        customer_id: _edited.customer_id,
-        customer_name: result, // ✅ 프로필 이름 변경
-        customer_phone: _edited.customer_phone,
-        customer_pw: _edited.customer_pw,
-        customer_email: _edited.customer_email,
-        customer_address: _edited.customer_address,
-        customer_image: _edited.customer_image,
-      );
+      _edited = _copyCustomer(customerName: result);
     });
   }
 
-  // ✅ 저장 버튼 누르면만 저장(결과 반환)
   void _saveAndClose() {
-    Navigator.pop(context, _edited);
+    // 내일 DB 붙일 때 여기서 updateCustomer(_edited) 넣으면 됨
+    Get.back(result: _edited);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('프로필 관리'),
+        title: Text('프로필 관리'),
         centerTitle: false,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // ✅ 저장 없이 뒤로가기
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Get.back(), // 저장 안 하고 뒤로가기
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ 프로필 이미지 + 편집 버튼(오버레이)
             Center(
               child: Stack(
                 alignment: Alignment.center,
@@ -134,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ? FileImage(_profileImageFile!)
                         : null,
                     child: _profileImageFile == null
-                        ? const Icon(
+                        ? Icon(
                             Icons.person,
                             size: 48,
                             color: Colors.grey,
@@ -147,15 +153,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       onTap: _pickProfileImage,
                       borderRadius: BorderRadius.circular(16),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 10,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.35),
+                          color: Color(0x59000000),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Text(
+                        child: Text(
                           '편집',
                           style: TextStyle(
                             color: Colors.white,
@@ -169,52 +175,47 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ],
               ),
             ),
+            SizedBox(height: 28),
 
-            const SizedBox(height: 28),
-
-            const Text(
+            Text(
               '프로필 정보',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
-            // ✅ 프로필 이름 (변경 버튼 있음)
             _twoLineRow(
               title: '프로필 이름',
               value: _edited.customer_name,
               showChangeButton: true,
               onChange: _showChangeProfileNameDialog,
             ),
-            const Divider(height: 24),
+            Divider(height: 24),
 
-            // ✅ 이름 (버튼 없음)
             _twoLineRow(
               title: '이름',
               value: 'User Name',
               showChangeButton: false,
             ),
-            const Divider(height: 24),
+            Divider(height: 24),
 
-            // ✅ 이메일 (버튼 없음)
             _twoLineRow(
               title: '이메일',
               value: _edited.customer_email,
               showChangeButton: false,
             ),
-            const Divider(height: 24),
+            Divider(height: 24),
 
-            const Spacer(),
+            Spacer(),
 
-            // ✅ 저장 버튼(하단)
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
                 onPressed: _saveAndClose,
-                child: const Text('저장'),
+                child: Text('저장'),
               ),
             ),
           ],
@@ -234,7 +235,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
+            padding: EdgeInsets.symmetric(vertical: 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -246,10 +247,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
@@ -270,7 +271,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text('변경', style: TextStyle(fontSize: 12)),
+              child: Text('변경', style: TextStyle(fontSize: 12)),
             ),
           ),
       ],
