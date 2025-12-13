@@ -17,14 +17,14 @@ class ProfileViewPage extends StatefulWidget {
 }
 
 class _ProfileViewPageState extends State<ProfileViewPage> {
-  late CustomerHandler handler;
+  late DatabaseHandlerCustomer handler; // ✅ 클래스명 수정
   Customer? _customer;
   File? profileImage;
 
   @override
   void initState() {
     super.initState();
-    handler = CustomerHandler();
+    handler = DatabaseHandlerCustomer();
     loadCustomer();
   }
 
@@ -44,7 +44,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
       return;
     }
 
-    final data = await handler.getCustomer(widget.customerId!);
+    final data = await handler.getCustomerById(widget.customerId!);
     if (data != null) {
       setState(() {
         _customer = data;
