@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:step_app/vm/database_handler_customer.dart';
 
 class ForgotEmailPage extends StatefulWidget {
   const ForgotEmailPage({super.key});
@@ -10,17 +11,32 @@ class ForgotEmailPage extends StatefulWidget {
 
 class _ForgotEmailPageState extends State<ForgotEmailPage> {
   late TextEditingController controller;
+  late DatabaseHandlerCustomer customerHandler;
+  //bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     controller = TextEditingController();
+    customerHandler = DatabaseHandlerCustomer();
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  /*updateButtonState(){
+  isButtonEnabled = controller.text.trim().length>=10;
+  setState(() {});
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: PColor.appBarBackgroundColor,
       appBar: AppBar(
         title: Text('이메일 찾기  |  STEP'),
         centerTitle: true,
@@ -28,7 +44,6 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
             Align(
@@ -53,6 +68,7 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: controller,
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   //border: OutlineInputBorder(),
                   hintText: '010-1234-5678',
@@ -66,11 +82,42 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () {},
+              //isButtonEnabled ? _findEmail : null,,
               child: Text('이메일 주소 발송하기'),
             ),
           ],
         ),
       ),
     );
-  }
+  } //function
+
+  /*
+ _findEmail() async {
+    String phone = controller.text.trim().replaceAll('-', ''); 
+
+    if (phone.length < 10) {
+      msg.snackBar('필수 입력 오류', '전화번호 10자리 이상을 입력해주세요.');
+      return;
+    }
+
+    String? foundEmail = await customerHandler.findEmailByPhone(phone);
+
+    if (foundEmail != null) {
+ 
+      msg.showDialog(
+        '이메일 발송 완료',
+        '등록된 이메일 주소 ${foundEmail}로 발송되었습니다.',
+      );
+    } else {
+
+      msg.showDialog(
+        '정보 없음',
+        '입력하신 전화번호로 등록된 계정을 찾을 수 없습니다.',
+      );
+    }
+  }*/
+
+  //이메일(ID) 조회
+  //SELECT customer_email FROM customer
+  //WHERE customer_phone = ?
 }
