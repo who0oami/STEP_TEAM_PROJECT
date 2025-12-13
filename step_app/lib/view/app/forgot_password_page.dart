@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as msg;
+import 'package:step_app/util/scolor.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() =>
-      _ForgotPasswordPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState
-    extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   late TextEditingController controller;
   //bool isButtonEnabled = false;
   //final Message msg = Message();
@@ -38,8 +37,8 @@ class _ForgotPasswordPageState
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('비밀번호 찾기  |  STEP'),
-        //backgroundColor: PColor.appBarBackgroundColor,
-        //foregroundColor: PColor.appBarForegroundColor,
+        backgroundColor: PColor.appBarBackgroundColor,
+        foregroundColor: PColor.appBarForegroundColor,
         centerTitle: true,
       ),
       body: Center(
@@ -52,10 +51,7 @@ class _ForgotPasswordPageState
               alignment: Alignment.centerLeft,
               child: Text(
                 '   비밀번호 찾기',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             Text('본인 인증 완료 후, 휴대폰으로 임시 비밀번호를 발송해드립니다.'),
@@ -79,8 +75,8 @@ class _ForgotPasswordPageState
             SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey,
-                foregroundColor: Colors.white,
+                backgroundColor: PColor.buttonPrimary,
+                foregroundColor: PColor.buttonTextColor,
               ),
               onPressed: () {},
               //isButtonEnabled ? _findPassword : null,

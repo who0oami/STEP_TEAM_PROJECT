@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/get_utils/get_utils.dart';
 import 'package:step_app/util/message.dart';
+import 'package:step_app/util/scolor.dart';
 import 'package:step_app/vm/database_handler_customer.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -53,8 +54,8 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('회원가입'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: PColor.appBarBackgroundColor,
+        foregroundColor: PColor.appBarForegroundColor,
       ),
 
       body: SingleChildScrollView(
@@ -79,10 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
               //Checkbox(value: value, onChanged: onChanged)
               Row(
                 children: [
-                  Checkbox(
-                    value: all,
-                    onChanged: _toggleAll,
-                  ),
+                  Checkbox(value: all, onChanged: _toggleAll),
                   Text('모두 동의합니다'),
                 ],
               ),
@@ -138,6 +136,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PColor.buttonPrimary,
+                      foregroundColor: PColor.buttonTextColor,
+                    ),
                     onPressed: () {
                       _signUp();
                     },
@@ -154,13 +156,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   _toggleAll(bool? value) {
     if (value != null) {
-      setState(() {
-        all = value;
-        fourteen = value;
-        use = value;
-        collect = value;
-        marketing = value;
-      });
+      all = value;
+      fourteen = value;
+      use = value;
+      collect = value;
+      marketing = value;
+      setState(() {});
     }
   }
 
@@ -211,10 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
     // }
 
     if (!fourteen || !use || !collect) {
-      msg.showDialog(
-        '필수 약관 동의 필요',
-        '만 14세 이상, 이용 약관, 개인정보 수집 및 이용 동의는 필수입니다.',
-      );
+      msg.showDialog('필수 약관 동의 필요', '만 14세 이상, 이용 약관, 개인정보 수집 및 이용 동의는 필수입니다.');
       return;
     }
 
@@ -239,10 +237,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     */
 
-    msg.showDialog(
-      '회원가입 완료',
-      '${namecontroller.text}님, 회원가입을 축하드립니다!',
-    );
+    msg.showDialog('회원가입 완료', '${namecontroller.text}님, 회원가입을 축하드립니다!');
   }
 
   /*

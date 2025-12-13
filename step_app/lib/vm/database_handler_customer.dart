@@ -98,8 +98,9 @@ Future<bool> checkEmailExists(String email) async {
   // =====================
   Future<List<Customer>> queryCustomer() async {
     final db = await initializedDB();
-    final List<Map<String, Object?>> result = await db
-        .rawQuery('select * from customer');
+    final List<Map<String, Object?>> result = await db.rawQuery(
+      'select * from customer',
+    );
 
     return result.map((e) => Customer.fromMap(e)).toList();
   }
@@ -118,10 +119,7 @@ Future<bool> checkEmailExists(String email) async {
     return Customer.fromMap(result.first);
   }
 
-  Future<Customer?> hasCustomer(
-    String email,
-    String pw,
-  ) async {
+  Future<Customer?> hasCustomer(String email, String pw) async {
     final db = await initializedDB();
     final result = await db.rawQuery(
       'select * from customer where customer_email = ? and customer_pw = ?',
@@ -130,6 +128,21 @@ Future<bool> checkEmailExists(String email) async {
 
     if (result.isEmpty) return null;
     return Customer.fromMap(result.first);
+  }
+
+  // =====================
+  // QUERY (전화번호로 이메일 찾기)
+  // =====================
+  Future<String?> findEmailByPhone(String phone) async {
+    final db = await initializedDB();
+
+    final result = await db.rawQuery(
+      'select customer_email from customer where customer_phone = ?',
+      [phone],
+    );
+
+    if (result.isEmpty) return null;
+    return result.first['customer_email'] as String;
   }
 
   // =====================
@@ -170,9 +183,8 @@ Future<bool> checkEmailExists(String email) async {
   // =====================
   Future<int> deleteCustomer(int customer_id) async {
     final db = await initializedDB();
-    return await db.rawDelete(
-      'delete from customer where customer_id = ?',
-      [customer_id],
-    );
+    return await db.rawDelete('delete from customer where customer_id = ?', [
+      customer_id,
+    ]);
   }
 }
