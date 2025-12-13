@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/get_utils/get_utils.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:step_app/util/message.dart';
+import 'package:step_app/vm/database_handler_customer.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController pwcheckcontroller;
   late TextEditingController namecontroller;
   late TextEditingController phonecontroller;
+  late DatabaseHandlerCustomer customerHandler;
 
   final Message msg = Message();
 
@@ -32,6 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
     pwcheckcontroller = TextEditingController();
     namecontroller = TextEditingController();
     phonecontroller = TextEditingController();
+    customerHandler = DatabaseHandlerCustomer();
   }
 
   @override
@@ -83,10 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   //SizedBox(height: 50),
                   Checkbox(
                     value: all,
-                    onChanged: (value) {
-                      all = value!;
-                      setState(() {});
-                    },
+                    onChanged: _toggleAll,
                   ),
                   Text('모두 동의합니다'),
                 ],
@@ -109,7 +110,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Checkbox(
                     value: use,
                     onChanged: (value) {
-                      collect = value!;
+                      use = value!;
                       setState(() {});
                     },
                   ),
@@ -150,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   //SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      // _signUp();
+                      _signUp();
                     },
                     child: Text('가입하기'),
                   ),
@@ -228,4 +229,30 @@ class _SignUpPageState extends State<SignUpPage> {
       '${namecontroller.text}님, 회원가입을 축하드립니다!',
     );
   }
+
+  /*
+Future insertAction() async {
+    Customer customer = Customer(
+      CustomerEmail: _emailTextEditingController.text.trim(),
+      CustomerPw: _pwTextEditingController.text.trim(),
+      CustomerName: _nameTextEditingController.text.trim(),
+      CustomerPhone: _phoneTextEditingController.text.trim(),
+      //CustomerAddress: _addressData,
+      //CustomerImage: _imageData,
+      //CustomerLat: _latData,
+      //CustomerLng: _lngData,
+      //initDate: DateTime.now().toString(),
+    );
+   */
+
+  /*
+  //가입
+  INSERTINSERT INTO customer 
+  (customer_email, customer_pw, customer_name, customer_phone) 
+  VALUES (?, ?, ?, ?)
+
+  //중복 이메일 확인
+  SELECTSELECT customer_id FROM customer 
+  WHERE customer_email = ?
+   */
 }

@@ -65,9 +65,8 @@ class DatabaseHandlerCustomer {
   // =====================
   Future<List<Customer>> queryCustomer() async {
     final db = await initializedDB();
-    final List<Map<String, Object?>> result = await db.rawQuery(
-      'select * from customer',
-    );
+    final List<Map<String, Object?>> result = await db
+        .rawQuery('select * from customer');
 
     return result.map((e) => Customer.fromMap(e)).toList();
   }
@@ -80,6 +79,20 @@ class DatabaseHandlerCustomer {
     final result = await db.rawQuery(
       'select * from customer where customer_id = ?',
       [customer_id],
+    );
+
+    if (result.isEmpty) return null;
+    return Customer.fromMap(result.first);
+  }
+
+  Future<Customer?> hasCustomer(
+    String email,
+    String pw,
+  ) async {
+    final db = await initializedDB();
+    final result = await db.rawQuery(
+      'select * from customer where customer_email = ? and customer_pw = ?',
+      [email, pw],
     );
 
     if (result.isEmpty) return null;
@@ -124,8 +137,9 @@ class DatabaseHandlerCustomer {
   // =====================
   Future<int> deleteCustomer(int customer_id) async {
     final db = await initializedDB();
-    return await db.rawDelete('delete from customer where customer_id = ?', [
-      customer_id,
-    ]);
+    return await db.rawDelete(
+      'delete from customer where customer_id = ?',
+      [customer_id],
+    );
   }
 }
