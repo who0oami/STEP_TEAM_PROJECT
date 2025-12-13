@@ -60,6 +60,39 @@ class DatabaseHandlerCustomer {
     );
   }
 
+  /*
+// =====================
+// QUERY (이메일 중복 확인)
+// =====================
+Future<bool> checkEmailExists(String email) async {
+  final db = await initializedDB();
+  
+  final result = await db.rawQuery(
+    'SELECT customer_id FROM customer WHERE customer_email = ?',
+    [email],
+  );
+
+  return result.isNotEmpty;
+}
+
+// =====================
+  // QUERY (로그인 확인)
+  // =====================
+  Future<Customer?> hasCustomer(
+    String email,
+    String pw,
+  ) async {
+    final db = await initializedDB();
+    final result = await db.rawQuery(
+      'select * from customer where customer_email = ? and customer_pw = ?',
+      [email, pw],
+    );
+
+    if (result.isEmpty) return null;
+    return Customer.fromMap(result.first);
+  }
+*/
+
   // =====================
   // QUERY (전체 조회)
   // =====================

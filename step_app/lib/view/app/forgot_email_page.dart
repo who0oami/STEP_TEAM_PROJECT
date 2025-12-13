@@ -44,7 +44,6 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
             Align(

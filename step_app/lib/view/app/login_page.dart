@@ -44,7 +44,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      //appBar: AppBar(title: Text('Home Page')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -194,45 +193,5 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     }
-
-    // if (emailcontroller.text.trim() == 'root@naver.com' &&
-    //     pwcontroller.text.trim() == "1234") {
-    //   Get.defaultDialog(
-    //     title: '로그인 성공',
-    //     middleText: '환영합니다.',
-    //     barrierDismissible: false,
-    //     actions: [
-    //       TextButton(
-    //         onPressed: () => Get.to(Home()),
-    //         child: Text("확인"),
-    //       ),
-    //     ],
-    //   );
-    // } else {
-    //   Get.snackbar(
-    //     "로그인 실패",
-    //     "ID와 Password를 확인해주세요.",
-    //     snackPosition: SnackPosition.TOP,
-    //     duration: Duration(seconds: 2),
-    //   );
-    // }
   }
 }
-
-  // Future insertAction() async {
-  //     Customer customer = Customer(
-  //       CustomerEmail: _emailTextEditingController.text.trim(),
-  //       CustomerPw: _pwTextEditingController.text.trim(),
-  //       //CustomerName: _nameTextEditingController.text.trim(),
-  //       //CustomerPhone: _phoneTextEditingController.text.trim(),
-  //       //CustomerAddress: _addressData,
-  //       //CustomerImage: _imageData,
-  //       //CustomerLat: _latData,
-  //       //CustomerLng: _lngData,
-  //       //initDate: DateTime.now().toString(),
-  //     );
-
-  //   //로그인 확인
-  //   SELECT customer_id, customer_name FROM customer
-  //   WHERE customer_email = ? AND customer_pw = ?
-
