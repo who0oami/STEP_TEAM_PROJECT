@@ -3,10 +3,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:step_app/model/customer.dart';
-import 'package:step_app/view/app/order_history_page.dart';
-import 'package:step_app/vm/database_handler_customer.dart';
-import 'edit_profile_page.dart';
+import 'package:step_app/util/message.dart';
+import 'package:step_app/util/scolor.dart';
+import 'package:step_app/view/app/edit_profile_page.dart';
+import 'package:step_app/view/app/order_history_page.dart'; // PurchaseListItem 타입
 
 class ProfileViewPage extends StatefulWidget {
   final int? customerId;
@@ -17,56 +19,46 @@ class ProfileViewPage extends StatefulWidget {
 }
 
 class _ProfileViewPageState extends State<ProfileViewPage> {
-  late DatabaseHandlerCustomer handler; // ✅ 클래스명 수정
-  Customer? _customer;
+  final Message _msg = Message();
+
+  // ✅ 더미 프로필 (편집 후 setState로 바뀌게 final 제거)
   File? profileImage;
+  String name = '홍길동';
+  String profileName = 'taxol';
+  String email = 'test@example.com';
+
+  // ✅ EditProfilePage에 넘길 Customer 상태
+  Customer? customer;
 
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandlerCustomer();
-    loadCustomer();
-  }
+    customer = Customer(
+      customer_id: widget.customerId ?? 1,
+      customer_name: profileName, // Edit 페이지에서 '프로필이름 변경'으로 바뀌는 값
+      customer_phone: '010-1234-5678',
+      customer_pw: '1234',
+      customer_email: email,
+      customer_address: '서울 강남구 테헤란로 123',
+      customer_image: null, // 이미지 파일 경로 없으면 null
+    );
 
-  Future<void> loadCustomer() async {
-    if (widget.customerId == null) {
-      _customer = Customer(
-        customer_id: 0,
-        customer_name: "홍길동",
-        customer_phone: "010-1234-5678",
-        customer_pw: "1234",
-        customer_email: "test@example.com",
-        customer_address: "서울 강남구",
-        customer_image: null,
-      );
-      profileImage = null;
-      setState(() {});
-      return;
-    }
-
-    final data = await handler.getCustomerById(widget.customerId!);
-    if (data != null) {
-      setState(() {
-        _customer = data;
-        profileImage =
-            (data.customer_image != null &&
-                data.customer_image!.isNotEmpty)
-            ? File(data.customer_image!)
-            : null;
-      });
-    }
+    // (선택) 화면에 보여주는 변수들도 customer랑 동기화
+    profileName = customer!.customer_name;
+    email = customer!.customer_email;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_customer == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
-      appBar: AppBar(title: const Text("프로필"), centerTitle: true),
+      backgroundColor: PColor.baseBackgroundColor,
+      appBar: AppBar(
+        title: const Text("프로필"),
+        centerTitle: true,
+        backgroundColor: PColor.appBarBackgroundColor,
+        foregroundColor: PColor.appBarForegroundColor,
+        elevation: 0,
+      ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Padding(
@@ -74,7 +66,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 프로필 상단
               Row(
                 children: [
                   CircleAvatar(
@@ -95,40 +86,53 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildInfoRow(_customer!.customer_name),
-                      buildInfoRow(_customer!.customer_phone),
-                      buildInfoRow(_customer!.customer_email),
+                      _infoText(name),
+                      _infoText(profileName),
+                      _infoText(email),
                     ],
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
 
-              const SizedBox(height: 24),
-
-              // 프로필 편집 버튼
               SizedBox(
                 width: double.infinity,
+                height: 44,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PColor.buttonGray,
+                    foregroundColor: PColor.appBarForegroundColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
                   onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            EditProfilePage(customer: _customer!),
-                      ),
+                    if (customer == null) {
+                      _msg.snackBar('알림', '고객 정보가 없습니다.');
+                      return;
+                    }
+
+                    // ✅ 편집 페이지로 이동 + 수정된 Customer 받기
+                    final result = await Get.to<Customer>(
+                      () => EditProfilePage(customer: customer!),
                     );
 
-                    if (result != null && result is Customer) {
+                    if (result != null) {
                       setState(() {
-                        _customer = result;
+                        customer = result;
+
+                        // ✅ 화면 표시값 갱신
+                        profileName = result.customer_name;
+                        email = result.customer_email;
+
+                        final path = result.customer_image;
                         profileImage =
-                            (result.customer_image != null &&
-                                result.customer_image!.isNotEmpty)
-                            ? File(result.customer_image!)
+                            (path != null && path.isNotEmpty)
+                            ? File(path)
                             : null;
                       });
-                    } else {
-                      await loadCustomer();
+                      _msg.snackBar('완료', '프로필이 저장되었습니다.');
                     }
                   },
                   child: const Text("프로필 편집"),
@@ -137,14 +141,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
 
               const SizedBox(height: 16),
 
-              const SizedBox(height: 12),
-
-              // 구매목록
-              Expanded(
-                child: PurchaseListSection(
-                  customerId: widget.customerId,
-                ),
-              ),
+              const Expanded(child: PurchaseListSection()),
             ],
           ),
         ),
@@ -152,7 +149,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     );
   }
 
-  Widget buildInfoRow(String value) {
+  Widget _infoText(String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Text(
@@ -167,8 +164,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
 }
 
 class PurchaseListSection extends StatefulWidget {
-  const PurchaseListSection({super.key, required this.customerId});
-  final int? customerId;
+  const PurchaseListSection({super.key});
 
   @override
   State<PurchaseListSection> createState() =>
@@ -176,19 +172,37 @@ class PurchaseListSection extends StatefulWidget {
 }
 
 class _PurchaseListSectionState extends State<PurchaseListSection> {
-  bool _loading = true;
-  String? _error;
-  List<PurchaseListItem> _items = [];
+  final Message _msg = Message();
 
-  // ✅ 검색용
   final TextEditingController _searchController =
       TextEditingController();
   String _query = '';
 
+  late List<PurchaseListItem> _items;
+
   @override
   void initState() {
     super.initState();
-    _loadPurchases();
+    _items = <PurchaseListItem>[
+      PurchaseListItem(
+        orderId: 1,
+        imageBytes: Uint8List(0),
+        productName: '에어줌 페가수스',
+        brandName: 'NIKE',
+        branchName: '강남구 대리점',
+        sizeText: '270',
+        pickupStatus: 0,
+      ),
+      PurchaseListItem(
+        orderId: 2,
+        imageBytes: Uint8List(0),
+        productName: '슈퍼스타',
+        brandName: 'ADIDAS',
+        branchName: '서초구 대리점',
+        sizeText: '265',
+        pickupStatus: 1,
+      ),
+    ];
   }
 
   @override
@@ -197,75 +211,8 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
     super.dispose();
   }
 
-  Future<void> _loadPurchases() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-      _items = [];
-    });
-
-    try {
-      // ✅ 지금은 UI 확인용 더미
-      final dummy = <PurchaseListItem>[
-        PurchaseListItem(
-          orderId: 1,
-          imageBytes: Uint8List(0),
-          productName: '에어줌 페가수스',
-          brandName: 'NIKE',
-          branchName: '강남구 대리점',
-          sizeText: '270',
-          pickupStatus: 0,
-        ),
-        PurchaseListItem(
-          orderId: 2,
-          imageBytes: Uint8List(0),
-          productName: '슈퍼스타',
-          brandName: 'ADIDAS',
-          branchName: '서초구 대리점',
-          sizeText: '265',
-          pickupStatus: 1,
-        ),
-      ];
-
-      if (!mounted) return;
-      setState(() {
-        _items = dummy;
-        _loading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _error = e.toString();
-        _loading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_loading)
-      return const Center(child: CircularProgressIndicator());
-
-    if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('에러: $_error'),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _loadPurchases,
-              child: const Text('다시 시도'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (_items.isEmpty)
-      return const Center(child: Text('구매 내역이 없습니다.'));
-
-    // ✅ 제품명으로 필터링 (대소문자 무시)
     final q = _query.trim().toLowerCase();
     final filtered = q.isEmpty
         ? _items
@@ -275,7 +222,6 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
 
     return Column(
       children: [
-        // ✅ 헤더: 구매 내역 + 검색창
         Row(
           children: [
             const Text(
@@ -287,7 +233,7 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
             ),
             const Spacer(),
             SizedBox(
-              width: 250,
+              width: 260,
               height: 38,
               child: TextField(
                 controller: _searchController,
@@ -309,7 +255,6 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
           ],
         ),
         const SizedBox(height: 12),
-
         Expanded(
           child: filtered.isEmpty
               ? const Center(child: Text('검색 결과가 없습니다.'))
@@ -317,10 +262,8 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                   itemCount: filtered.length,
                   separatorBuilder: (_, __) =>
                       const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final item = filtered[index];
-                    return _buildPurchaseCard(item);
-                  },
+                  itemBuilder: (context, index) =>
+                      _buildPurchaseCard(filtered[index]),
                 ),
         ),
       ],
@@ -328,8 +271,21 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
   }
 
   Widget _buildPurchaseCard(PurchaseListItem item) {
+    final bool isWaiting = item.pickupStatus == 0;
+
     return InkWell(
-      onTap: () => Get.to(() => OrderHistoryPage(item: item)),
+      onTap: () async {
+        final bool confirmed =
+            (await Get.to<bool>(
+              () => OrderHistoryPage(item: item),
+            )) ??
+            false;
+
+        if (confirmed) {
+          setState(() => item.pickupStatus = 1);
+          _msg.snackBar('완료', '픽업 완료 처리되었습니다.');
+        }
+      },
       borderRadius: BorderRadius.circular(14),
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -357,7 +313,6 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                     ),
             ),
             const SizedBox(width: 12),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,73 +344,20 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
                 ],
               ),
             ),
-
             const SizedBox(width: 10),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  item.pickupStatus == 0 ? '픽업대기중' : '픽업완료',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: item.pickupStatus == 0
-                        ? Colors.black54
-                        : Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                if (item.pickupStatus == 0)
-                  SizedBox(
-                    height: 32,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final bool confirmed =
-                            (await Get.to<bool>(
-                              () => OrderHistoryPage(item: item),
-                            )) ??
-                            false;
-
-                        if (confirmed) {
-                          setState(() => item.pickupStatus = 1);
-                        }
-                      },
-                      child: const Text(
-                        '픽업 완료',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ),
-              ],
+            Text(
+              isWaiting ? '픽업대기중' : '픽업완료',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: isWaiting
+                    ? PColor.buttonGray
+                    : PColor.appBarForegroundColor,
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-// 리스트 아이템 모델 (화면에서만 상태 변경)
-class PurchaseListItem {
-  final int orderId;
-  final Uint8List imageBytes;
-  final String productName;
-  final String brandName;
-  final String branchName;
-  final String sizeText;
-
-  int pickupStatus; // 0=대기, 1=완료
-
-  PurchaseListItem({
-    required this.orderId,
-    required this.imageBytes,
-    required this.productName,
-    required this.brandName,
-    required this.branchName,
-    required this.sizeText,
-    this.pickupStatus = 0,
-  });
 }
