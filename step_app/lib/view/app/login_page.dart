@@ -4,6 +4,7 @@ import 'package:step_app/view/app/forgot_email_page.dart';
 import 'package:step_app/view/app/forgot_password_page.dart';
 import 'package:step_app/view/app/home.dart';
 import 'package:step_app/view/app/sign_up_page.dart';
+import 'package:step_app/vm/database_handler_customer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,12 +16,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailcontroller;
   late TextEditingController pwcontroller;
+  late DatabaseHandlerCustomer customerHandler;
+  //bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     emailcontroller = TextEditingController();
     pwcontroller = TextEditingController();
+    customerHandler = DatabaseHandlerCustomer();
   }
 
   @override
@@ -30,11 +34,16 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  // _updateButtonState() {
+  //   setState(() {
+  //     isButtonEnabled = emailcontroller.text.isNotEmpty && pwcontroller.text.isNotEmpty;
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      //appBar: AppBar(title: Text('Home Page')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   } //function
 
-  checkLogin() {
+  checkLogin() async {
     if (emailcontroller.text.trim().isEmpty ||
         pwcontroller.text.trim().isEmpty) {
       Get.snackbar(
@@ -158,8 +167,19 @@ class _LoginPageState extends State<LoginPage> {
         duration: Duration(seconds: 2),
       );
     } else {
-      if (emailcontroller.text.trim() == 'root@naver.com' &&
-          pwcontroller.text.trim() == "1234") {
+      final result = await customerHandler.hasCustomer(
+        emailcontroller.text.trim(),
+        pwcontroller.text.trim(),
+      );
+
+      if (result == null) {
+        Get.snackbar(
+          "로그인 실패",
+          "ID와 Password를 확인해주세요.",
+          snackPosition: SnackPosition.TOP,
+          duration: Duration(seconds: 2),
+        );
+      } else {
         Get.defaultDialog(
           title: '로그인 성공',
           middleText: '환영합니다.',
@@ -170,13 +190,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Text("확인"),
             ),
           ],
-        );
-      } else {
-        Get.snackbar(
-          "로그인 실패",
-          "ID와 Password를 확인해주세요.",
-          snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 2),
         );
       }
     }
