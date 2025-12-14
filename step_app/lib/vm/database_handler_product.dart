@@ -1,36 +1,13 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_app/model/product.dart';
+import 'package:step_app/vm/app_database.dart';
 
 class DatabaseHandlerProduct {
-  Future<Database> initializedDB() async {
-    final String path = await getDatabasesPath();
-
-    return openDatabase(
-      join(path, 'step.db'),
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          create table product (
-            product_id integer primary key autoincrement,
-            category_product_id text not null,
-            category_manufacturer_id text not null,
-            category_product_size_id text not null,
-            category_color_id text not null,
-            product_price real not null,
-            product_quantity integer not null,
-            product_image blob not null
-          )
-        ''');
-      },
-    );
-  }
-
   // =====================
   // INSERT
   // =====================
   Future<int> insertProduct(Product product) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     return await db.rawInsert(
       '''
       insert into product (
@@ -60,7 +37,7 @@ class DatabaseHandlerProduct {
   // QUERY (전체 조회)
   // =====================
   Future<List<Product>> queryProduct() async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     final List<Map<String, Object?>> result = await db.rawQuery(
       'select * from product',
     );
@@ -72,7 +49,7 @@ class DatabaseHandlerProduct {
   // QUERY (ID로 조회)
   // =====================
   Future<Product?> getProductById(int id) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     final result = await db.rawQuery(
       'select * from product where product_id = ?',
       [id],
@@ -86,7 +63,7 @@ class DatabaseHandlerProduct {
   // UPDATE
   // =====================
   Future<int> updateProduct(Product product) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
 
     if (product.product_id == null) {
       throw Exception('product_id가 없는 데이터는 update 할 수 없습니다.');
@@ -122,7 +99,7 @@ class DatabaseHandlerProduct {
   // DELETE
   // =====================
   Future<int> deleteProduct(int product_id) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     return await db.rawDelete(
       'delete from product where product_id = ?',
       [product_id],
