@@ -51,7 +51,10 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 50),
             Text(
               'STEP',
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               'SMART TERMINAL FOR EVERY PURCHASE',
@@ -65,7 +68,9 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: emailcontroller,
-                decoration: InputDecoration(labelText: '이메일주소'),
+                decoration: InputDecoration(
+                  labelText: '이메일주소',
+                ),
               ),
             ),
             Padding(
@@ -73,7 +78,9 @@ class _LoginPageState extends State<LoginPage> {
               child: TextField(
                 controller: pwcontroller,
                 //obscureText: true,
-                decoration: InputDecoration(labelText: '비밀번호'),
+                decoration: InputDecoration(
+                  labelText: '비밀번호',
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -99,8 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('회원가입'),
                   style: TextButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
-                    foregroundColor: PColor.buttonTextColor,
+                    //backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonPrimary,
                   ),
                 ),
                 Text('   |   '),
@@ -110,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('이메일 찾기'),
                   style: TextButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
-                    foregroundColor: PColor.buttonTextColor,
+                    //backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonPrimary,
                   ),
                 ),
                 Text('   |   '),
@@ -121,8 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('비밀번호 찾기'),
                   style: TextButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
-                    foregroundColor: PColor.buttonTextColor,
+                    //backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonPrimary,
                   ),
                 ),
               ],
@@ -135,16 +142,16 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: Text('이용약관'),
                   style: TextButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
-                    foregroundColor: PColor.buttonTextColor,
+                    //backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonPrimary,
                   ),
                 ),
                 TextButton(
                   onPressed: () {},
                   child: Text('개인정보 처리방침'),
                   style: TextButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
-                    foregroundColor: PColor.buttonTextColor,
+                    //backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonPrimary,
                   ),
                 ),
               ],
@@ -183,7 +190,10 @@ class _LoginPageState extends State<LoginPage> {
           middleText: '환영합니다.',
           barrierDismissible: false,
           actions: [
-            TextButton(onPressed: () => Get.to(Home()), child: Text("확인")),
+            TextButton(
+              onPressed: () => Get.to(Home()),
+              child: Text("확인"),
+            ),
           ],
         );
       }

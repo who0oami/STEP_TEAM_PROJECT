@@ -80,7 +80,10 @@ class _SignUpPageState extends State<SignUpPage> {
               //Checkbox(value: value, onChanged: onChanged)
               Row(
                 children: [
-                  Checkbox(value: all, onChanged: _toggleAll),
+                  Checkbox(
+                    value: all,
+                    onChanged: _toggleAll,
+                  ),
                   Text('모두 동의합니다'),
                 ],
               ),
@@ -132,20 +135,18 @@ class _SignUpPageState extends State<SignUpPage> {
                   Text('[동의]마케팅 수신 동의'),
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PColor.buttonPrimary,
-                      foregroundColor: PColor.buttonTextColor,
-                    ),
-                    onPressed: () {
-                      _signUp();
-                    },
-                    child: Text('가입하기'),
+
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
-                ],
+                  onPressed: () {
+                    _signUp();
+                  },
+                  child: Text('가입하기'),
+                ),
               ),
             ],
           ),
@@ -212,7 +213,10 @@ class _SignUpPageState extends State<SignUpPage> {
     // }
 
     if (!fourteen || !use || !collect) {
-      msg.showDialog('필수 약관 동의 필요', '만 14세 이상, 이용 약관, 개인정보 수집 및 이용 동의는 필수입니다.');
+      msg.showDialog(
+        '필수 약관 동의 필요',
+        '만 14세 이상, 이용 약관, 개인정보 수집 및 이용 동의는 필수입니다.',
+      );
       return;
     }
 
@@ -237,7 +241,10 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     */
 
-    msg.showDialog('회원가입 완료', '${namecontroller.text}님, 회원가입을 축하드립니다!');
+    msg.showDialog(
+      '회원가입 완료',
+      '${namecontroller.text}님, 회원가입을 축하드립니다!',
+    );
   }
 
   /*
