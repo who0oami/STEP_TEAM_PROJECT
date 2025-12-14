@@ -12,7 +12,7 @@ import 'package:step_app/util/scolor.dart';
 
 class Product {
   final int? product_id; // 제품 번호_자동 증가 Primary Key
-  final String category_product_id; // 제품 카테고리 id
+  // final String category_product_id; // 제품 카테고리 id
   final String category_manufacturer_id; // 제조사 카테고리 id
   final String category_product_size_id; // 사이즈 카테고리 id
   final String category_color_id; // 색상 카테고리 id
@@ -21,7 +21,7 @@ class Product {
   final Uint8List product_image; // 제품 이미지
   Product({
     this.product_id,
-    required this.category_product_id,
+    // required this.category_product_id,
     required this.category_manufacturer_id,
     required this.category_product_size_id,
     required this.category_color_id,
@@ -52,7 +52,7 @@ class _DetailPageState extends State<DetailPage>
     productList = [
       Product(
         product_id: 1,
-        category_product_id: '001',
+        // category_product_id: '001',
         category_manufacturer_id: 'Nike',
         category_product_size_id: '270',
         category_color_id: 'Black',
@@ -62,7 +62,7 @@ class _DetailPageState extends State<DetailPage>
       ),
       Product(
         product_id: 2,
-        category_product_id: '002',
+        // category_product_id: '002',
         category_manufacturer_id: 'Nike',
         category_product_size_id: '265',
         category_color_id: 'Black',
@@ -73,7 +73,7 @@ class _DetailPageState extends State<DetailPage>
       ),
       Product(
         product_id: 3,
-        category_product_id: '003',
+        // category_product_id: '003',
         category_manufacturer_id: 'Nike',
         category_product_size_id: '280',
         category_color_id: 'Black',
@@ -83,7 +83,7 @@ class _DetailPageState extends State<DetailPage>
       ),
       Product(
         product_id: 4,
-        category_product_id: '004',
+        // category_product_id: '004',
         category_manufacturer_id: 'Nike',
         category_product_size_id: '250',
         category_color_id: 'Black',
@@ -267,15 +267,15 @@ class _DetailPageState extends State<DetailPage>
             SizedBox(height: 8),
 
             Text(
-              selectedProduct.product_id.toString(), //제품명
+              selectedProduct.product_id.toString(),
               style: const TextStyle(fontSize: 16, color: Colors.black54),
             ),
             SizedBox(height: 4),
-            Text(
-              '{manufacturer_category}:{product_category},',
-              style: TextStyle(fontSize: 11, color: Colors.grey),
-            ),
 
+            // Text(
+            //   '{manufacturer_category}:{product_category},',
+            //   style: TextStyle(fontSize: 11, color: Colors.grey),
+            // ),
             SizedBox(height: 40),
           ],
         ),
