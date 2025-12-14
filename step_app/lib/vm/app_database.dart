@@ -93,14 +93,6 @@ class AppDatabase {
             category_manufacturer_name TEXT
           )
         ''');
-
-        await db.execute('''
-          CREATE TABLE categoryproduct (
-            category_product_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            category_product_name TEXT
-          )
-        ''');
-
         await db.execute('''
           CREATE TABLE categorysize (
             category_size_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,7 +103,6 @@ class AppDatabase {
         await db.execute('''
           CREATE TABLE product (
             product_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            category_product_id INTEGER NOT NULL,
             category_manufacturer_id INTEGER NOT NULL,
             category_product_size_id INTEGER NOT NULL,
             category_color_id INTEGER NOT NULL,
