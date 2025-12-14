@@ -1,6 +1,5 @@
 
 import 'package:step_app/model/category_sex.dart';
-import 'package:step_app/vm/database_handler_category_sex.dart';
 
 class SeedCategorySex {
   final List<Category_sex> categorySexSeedData = [
