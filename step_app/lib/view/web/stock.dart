@@ -58,25 +58,27 @@ class _StockState extends State<Stock> {
     ]; // columns
   loadData();
   }
-  // 더미 데이터 생성
+ // 더미 데이터 생성
   Future<void> loadData() async {
-  final products = [
-    Product(
-      product_id: 1,
-      category_product_id: '운동화',
-      category_manufacturer_id: '나이키',
-      category_product_size_id: '260',
-      category_color_id: '화이트',
-      product_price: 239000,
-      product_quantity: 10,
-      product_image: Uint8List(0),
-    ),
-  ];
+    final products = [
+      Product(
+        product_id: 1,
+        category_product_id: '운동화',
+        category_manufacturer_id: '나이키',
+        category_size_id: '260',
+        category_color_id: '화이트',
+        product_price: 239000,
+        product_quantity: 10,
+        product_image: Uint8List(0),
+      ),
+    ];
 
-  setState(() {
-    rows = productListToRows(products);
-  });
-}
+    setState(() {
+      rows = productListToRows(products);
+    });
+  }
+
+
 
   // 한 줄 
   PlutoRow productToRow(Product p) {
