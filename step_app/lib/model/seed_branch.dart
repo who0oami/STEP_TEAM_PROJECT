@@ -6,6 +6,7 @@ class SeedBranch {
   static Future<void> insertSeed(Database db) async {
     for (final b in seedBranches) {
       await db.insert('branch', {
+        'branch_id': b.branch_id,
         'branch_name': b.branch_name,
         'branch_phone': b.branch_phone,
         'branch_location': b.branch_location,
@@ -18,6 +19,7 @@ class SeedBranch {
 
 final List<Branch> seedBranches = [
   Branch(
+    branch_id: 1,
     branch_name: '강남점',
     branch_phone: '02-325-4441',
     branch_location: '서울특별시 강남구 역삼동 815-2',
@@ -25,6 +27,7 @@ final List<Branch> seedBranches = [
     branch_lng: 127.0266585,
   ),
   Branch(
+    branch_id: 2,
     branch_name: '홍대점',
     branch_phone: '02-325-4442',
     branch_location: '서울특별시 마포구 홍익로 17',
@@ -32,6 +35,7 @@ final List<Branch> seedBranches = [
     branch_lng: 126.9228014552,
   ),
   Branch(
+    branch_id: 3,
     branch_name: '성수점',
     branch_phone: '02-325-4437',
     branch_location: '서울특별시 성동구 성수동2가 320-4,',
