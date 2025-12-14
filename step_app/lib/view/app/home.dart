@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_app/util/scolor.dart';
+import 'package:step_app/view/app/login_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_first_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_second_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_third_page.dart';
+import 'package:step_app/vm/seeds/seed_branch.dart';
+import 'package:step_app/vm/seeds/seed_category_color.dart';
+import 'package:step_app/vm/seeds/seed_category_manufacturer.dart';
+import 'package:step_app/vm/seeds/seed_category_product.dart';
+import 'package:step_app/vm/seeds/seed_category_size.dart';
+import 'package:step_app/vm/seeds/seed_customer.dart';
+import 'package:step_app/vm/seeds/seed_emplyee.dart';
+import 'package:step_app/vm/seeds/seed_manufacturer.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,7 +20,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home>
+    with SingleTickerProviderStateMixin {
   // property
   late TabController tabController;
   late TextEditingController searchController;
@@ -25,10 +34,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
+  // 초기값
   @override
   void dispose() {
     tabController.dispose();
     searchController.dispose();
+    // 초기값 사용 후 삭제 必
+    SeedBranch.insertSeed();
+    SeedCategorySize.insertSeed();
+    SeedCategoryColor.insertSeed();
+    SeedCategoryManufacturer.insertSeed();
+    SeedProduct.insertSeed();
+    SeedManufacturer.insertSeed();
+    SeedEmployee.insertSeed();
+    SeedProduct.insertSeed();
+    SeedCustomer.insertSeed();
     super.dispose();
   }
 
@@ -61,10 +81,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ),
 
                         border: UnderlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 10,
-                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 10,
+                            ),
                       ),
                       onSubmitted: (value) {
                         //
@@ -75,17 +96,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   const SizedBox(width: 8),
 
                   // 첫 번째 아이콘
-                  IconButton(
-                    onPressed: () {
-                      // Get.to(loginPage());
-                    },
-                    icon: Icon(Icons.shopping_bag_outlined, size: 28),
-                  ),
-                  const SizedBox(width: 4),
+                  // IconButton(
+                  //   onPressed: () {
+                  //     // Get.to(loginPage());
+                  //   },
+                  //   icon: Icon(
+                  //     Icons.shopping_bag_outlined,
+                  //     size: 28,
+                  //   ),
+                  // ),
+                  // const SizedBox(width: 4),
                   // 두 번째 아이콘 (로그인)
                   IconButton(
                     onPressed: () {
-                      // Get.to(loginPage());
+                      Get.to(LoginPage());
                     },
                     icon: Icon(Icons.person, size: 28),
                   ),
@@ -96,7 +120,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             //  TabBar
             Container(
               height: 50,
-              color: const Color.fromARGB(255, 255, 227, 145),
+              color: const Color.fromARGB(
+                255,
+                255,
+                227,
+                145,
+              ),
               child: TabBar(
                 controller: tabController,
                 labelColor: Colors.black,

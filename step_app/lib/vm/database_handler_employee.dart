@@ -32,16 +32,46 @@ class DatabaseHandlerEmployee {
     );
   }
 
+  // 상사 id로 인해 필요함 Employee seed
+  Future<int> insertEmployeeWithId(Employee e) async {
+    final db = await AppDatabase.instance.db;
+    return await db.rawInsert(
+      '''
+    insert into employee
+    (
+      employee_id,
+      employee_senior_id,
+      employee_name,
+      employee_phone,
+      employee_password,
+      employee_role,
+      employee_workplace
+    )
+    values (?, ?, ?, ?, ?, ?, ?)
+    ''',
+      [
+        e.employee_id,
+        e.employee_senior_id,
+        e.employee_name,
+        e.employee_phone,
+        e.employee_password,
+        e.employee_role,
+        e.employee_workplace,
+      ],
+    );
+  }
+
   // =====================
   // QUERY (전체 조회)
   // =====================
   Future<List<Employee>> queryEmployee() async {
     final Database db = await AppDatabase.instance.db;
-    final List<Map<String, Object?>> result = await db.rawQuery(
-      'select * from employee',
-    );
+    final List<Map<String, Object?>> result = await db
+        .rawQuery('select * from employee');
 
-    return result.map((e) => Employee.fromMap(e)).toList();
+    return result
+        .map((e) => Employee.fromMap(e))
+        .toList();
   }
 
   // =====================
