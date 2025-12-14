@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 
 import 'package:step_app/view/app/payment_detail_page.dart';
 
+// ✅ 추가
+import 'package:step_app/view/app/branch_map_page.dart';
+import 'package:step_app/view/app/refund_product_detail.dart';
+
 class OrderHistoryPage extends StatefulWidget {
   OrderHistoryPage({super.key, required this.item});
   final PurchaseListItem item;
@@ -120,7 +124,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 Expanded(
                   child: _fullOutlineButton(
                     text: '반품하기',
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => RefundProductDetail());
+                    },
                   ),
                 ),
               ],
@@ -258,6 +264,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   Widget _pickupInfoCard({required String branchName}) {
+    final i = widget.item; //  추가 (item 접근용)
+
     final pickupAddress = '서울특별시 강남구 강남대로102길\n30 203호';
     final pickupDate = '2025.12.12 이후';
     final pickupTime = '10:00 ~ 21:00';
@@ -294,7 +302,25 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             width: double.infinity,
             height: 40,
             child: OutlinedButton(
-              onPressed: () {},
+              // 여기만 교체 (디자인 그대로)
+              onPressed: () {
+                final lat = i.branchLat;
+                final lng = i.branchLng;
+
+                if (lat == null || lng == null) {
+                  Get.snackbar('알림', '지점 좌표가 없습니다.');
+                  return;
+                }
+
+                Get.to(
+                  () => BranchMapPage(
+                    branchName: i.branchName,
+                    address: i.branchLocation,
+                    lat: lat,
+                    lng: lng,
+                  ),
+                );
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Color(0xFFE1E1E1)),
                 shape: RoundedRectangleBorder(
@@ -408,6 +434,11 @@ class PurchaseListItem {
 
   int pickupStatus; // 0=대기, 1=완료
 
+  // ✅ 추가
+  final double? branchLat;
+  final double? branchLng;
+  final String? branchLocation;
+
   PurchaseListItem({
     required this.orderId,
     required this.imageBytes,
@@ -416,5 +447,10 @@ class PurchaseListItem {
     required this.branchName,
     required this.sizeText,
     this.pickupStatus = 0,
+
+    // ✅ 추가
+    this.branchLat,
+    this.branchLng,
+    this.branchLocation,
   });
 }
