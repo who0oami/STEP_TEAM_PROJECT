@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailcontroller;
   late TextEditingController pwcontroller;
   late DatabaseHandlerCustomer customerHandler;
-  //bool isButtonEnabled = false;
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
@@ -28,10 +28,12 @@ class _LoginPageState extends State<LoginPage> {
     customerHandler = DatabaseHandlerCustomer();
   }
 
-  // _updateButtonState() {
-  //     isButtonEnabled = emailcontroller.text.isNotEmpty && pwcontroller.text.isNotEmpty;
-  //   setState(() {});
-  // }
+  _updateButtonState() {
+    isButtonEnabled =
+        emailcontroller.text.isNotEmpty &&
+        pwcontroller.text.isNotEmpty;
+    setState(() {});
+  }
 
   @override
   void dispose() {
@@ -77,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: pwcontroller,
-                //obscureText: true,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: '비밀번호',
                 ),
@@ -113,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text('   |   '),
                 TextButton(
                   onPressed: () {
-                    Get.to((ForgotEmailPage));
+                    Get.to(ForgotEmailPage());
                   },
                   child: Text('이메일 찾기'),
                   style: TextButton.styleFrom(
