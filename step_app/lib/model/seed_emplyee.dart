@@ -1,4 +1,26 @@
 import 'package:step_app/model/employee.dart';
+import 'package:sqflite/sqflite.dart';
+
+class SeedEmployee {
+  static Future<void> insertSeed(Database db) async {
+    // ⚠️ senior 관계 때문에 ID 순서 중요
+    for (final e in seedEmployees) {
+      await db.insert(
+        'employee',
+        {
+          'employee_id': e.employee_id,
+          'employee_senior_id': e.employee_senior_id,
+          'employee_name': e.employee_name,
+          'employee_phone': e.employee_phone,
+          'employee_password': e.employee_password,
+          'employee_role': e.employee_role,
+          'employee_workplace': e.employee_workplace,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+}
 
 final List<Employee> seedEmployees = [
   // ======================

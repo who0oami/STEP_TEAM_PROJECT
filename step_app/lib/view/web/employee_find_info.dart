@@ -89,7 +89,12 @@ class _EmployeeFindInfoState
                     243,
                     243,
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(0),
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(0),
+                  ),
                 ),
                 child: Center(
                   child: SizedBox(

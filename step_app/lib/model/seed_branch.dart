@@ -1,4 +1,20 @@
 import 'package:step_app/model/branch.dart';
+import 'package:sqflite/sqflite.dart';
+
+// seed_branch_insert.dart
+class SeedBranch {
+  static Future<void> insertSeed(Database db) async {
+    for (final b in seedBranches) {
+      await db.insert('branch', {
+        'branch_name': b.branch_name,
+        'branch_phone': b.branch_phone,
+        'branch_location': b.branch_location,
+        'branch_lat': b.branch_lat,
+        'branch_lng': b.branch_lng,
+      });
+    }
+  }
+}
 
 final List<Branch> seedBranches = [
   Branch(
