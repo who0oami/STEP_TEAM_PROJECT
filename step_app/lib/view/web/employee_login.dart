@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_app/util/scolor.dart';
+import 'package:step_app/view/web/employee_find_info.dart';
 
 class EmployeeLogin extends StatefulWidget {
   const EmployeeLogin({super.key});
@@ -151,6 +152,26 @@ class _EmployeeLoginState extends State<EmployeeLogin> {
                             ),
                           ),
                         ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () => Get.to(
+                                  EmployeeFindInfo(),
+                                ),
+                                child: Text(
+                                  'Forgot password?',
+                                  style: TextStyle(
+                                    color:
+                                        Colors.blueAccent,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         if (errorText != null)
                           Padding(
                             padding: EdgeInsets.only(

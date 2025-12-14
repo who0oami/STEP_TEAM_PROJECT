@@ -1,73 +1,104 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:step_app/util/scolor.dart';
 
-class PColor {
-  static const Color appBarBackgroundColor = Colors.white;
-  static const Color appBarForegroundColor = Colors.black;
-  static const Color buttonPrimary = Colors.black;
-  static const Color buttonTextColor = Colors.white;
-  static const Color indicatorColor = Colors.black;
-}
+// class PColor {
+//   static const Color appBarBackgroundColor = Colors.white;
+//   static const Color appBarForegroundColor = Colors.black;
+//   static const Color buttonPrimary = Colors.black;
+//   static const Color buttonTextColor = Colors.white;
+//   static const Color indicatorColor = Colors.black;
+// }
 
-class Shoes {
-  final String name;
-  final Color color;
-  final int size;
-  //final String imageUrl;
-
-  Shoes({
-    required this.name,
-    required this.color,
-    required this.size,
-    //required this.imageUrl,
+class Product {
+  final int? product_id; // 제품 번호_자동 증가 Primary Key
+  final String category_product_id; // 제품 카테고리 id
+  final String category_manufacturer_id; // 제조사 카테고리 id
+  final String category_product_size_id; // 사이즈 카테고리 id
+  final String category_color_id; // 색상 카테고리 id
+  final double product_price; // 제품 가격
+  final int product_quantity; // 제품 수량
+  final Uint8List product_image; // 제품 이미지
+  Product({
+    this.product_id,
+    required this.category_product_id,
+    required this.category_manufacturer_id,
+    required this.category_product_size_id,
+    required this.category_color_id,
+    required this.product_price,
+    required this.product_quantity,
+    required this.product_image,
   });
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class DetailPage extends StatefulWidget {
+  const DetailPage({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<DetailPage> createState() => _DetailPageState();
 }
 
-class _HomeState extends State<Home>
+class _DetailPageState extends State<DetailPage>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-  late List<Shoes> shoesList;
-  late Shoes selectedShoe;
+  late List<Product> productList;
+  late Product selectedProduct;
 
   @override
   void initState() {
+    super.initState();
     controller = TabController(length: 3, vsync: this);
 
-    shoesList = [
-      Shoes(
-        name: '나이키 에어',
-        color: Colors.red,
-        size: 270,
-        //imageUrl: 'images/AIR+FORCE+1.png',
+    productList = [
+      Product(
+        product_id: 1,
+        category_product_id: '001',
+        category_manufacturer_id: 'Nike',
+        category_product_size_id: '270',
+        category_color_id: 'Black',
+        product_price: 100.0,
+        product_quantity: 10,
+        product_image: Uint8List.fromList([]),
       ),
-      Shoes(
-        name: '아디다스 부스트',
-        color: Colors.blue,
-        size: 265,
-        //imageUrl: 'images/AIR+FORCE+2.png',
+      Product(
+        product_id: 2,
+        category_product_id: '002',
+        category_manufacturer_id: 'Nike',
+        category_product_size_id: '265',
+        category_color_id: 'Black',
+        product_price: 110.0,
+        product_quantity: 15,
+
+        product_image: Uint8List.fromList([]),
       ),
-      Shoes(
-        name: '뉴발란스',
-        color: Colors.green,
-        size: 280,
-        //imageUrl: 'images/AIR+FORCE+3.png',
+      Product(
+        product_id: 3,
+        category_product_id: '003',
+        category_manufacturer_id: 'Nike',
+        category_product_size_id: '280',
+        category_color_id: 'Black',
+        product_price: 120.0,
+        product_quantity: 20,
+        product_image: Uint8List.fromList([]),
       ),
-      Shoes(
-        name: '컨버스',
-        color: Colors.purple,
-        size: 250,
-        //imageUrl: 'images/AIR+FORCE+4.png',
+      Product(
+        product_id: 4,
+        category_product_id: '004',
+        category_manufacturer_id: 'Nike',
+        category_product_size_id: '250',
+        category_color_id: 'Black',
+        product_price: 130.0,
+        product_quantity: 25,
+        product_image: Uint8List.fromList([]),
       ),
     ];
 
-    selectedShoe = shoesList.first;
-    super.initState();
+    selectedProduct = productList.first;
+  }
+
+  void _selectProduct(Product product) {
+    selectedProduct = product;
+    setState(() {});
   }
 
   @override
@@ -76,18 +107,12 @@ class _HomeState extends State<Home>
     super.dispose();
   }
 
-  void _selectShoe(Shoes shoe) {
-    setState(() {
-      selectedShoe = shoe;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     const double horizontalPadding = 16.0;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: PColor.baseBackgroundColor,
       appBar: AppBar(
         backgroundColor: PColor.appBarBackgroundColor,
         foregroundColor: PColor.appBarForegroundColor,
@@ -98,24 +123,15 @@ class _HomeState extends State<Home>
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.favorite_border),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.share_outlined),
-            onPressed: () {},
-          ),
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(icon: Icon(Icons.share_outlined), onPressed: () {}),
         ],
 
         bottom: TabBar(
           controller: controller,
           labelColor: PColor.appBarForegroundColor,
-          indicatorColor: PColor.indicatorColor,
+          indicatorColor: PColor.buttonPrimary,
           tabs: [
             Tab(text: '상품'),
             Tab(text: '사이즈'),
@@ -131,29 +147,14 @@ class _HomeState extends State<Home>
               controller: controller,
               children: [
                 _buildProductTab(horizontalPadding),
-
                 Center(child: Text("사이즈 선택 화면")),
-
                 Center(child: Text("상세 정보 화면")),
               ],
             ),
           ),
 
           Container(
-            padding: const EdgeInsets.all(
-              horizontalPadding,
-            ),
-            // decoration: BoxDecoration(
-            //               color: Colors.white,
-            //               boxShadow: [
-            //                 BoxShadow(
-            //                   color: Colors.grey.withOpacity(0.3),
-            //                   spreadRadius: 1,
-            //                   blurRadius: 5,
-            //                   offset: const Offset(0, -1),
-            //                 ),
-            //               ],
-            //             ),
+            padding: const EdgeInsets.all(horizontalPadding),
             child: SizedBox(
               width: double.infinity,
               height: 50,
@@ -168,10 +169,7 @@ class _HomeState extends State<Home>
                 ),
                 child: Text(
                   '구매하기',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -200,10 +198,10 @@ class _HomeState extends State<Home>
               child: Container(
                 height: 300,
                 color: Colors.grey[300],
-                child: const Center(
+                child: Center(
                   child: Text(
                     "상품 이미지 없음",
-                    style: TextStyle(color: Colors.black54),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ),
@@ -214,39 +212,38 @@ class _HomeState extends State<Home>
               height: 70,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: shoesList.length,
+                itemCount: productList.length,
                 itemBuilder: (context, index) {
-                  final shoe = shoesList[index];
+                  final product = productList[index];
                   return GestureDetector(
-                    onTap: () => _selectShoe(shoe),
+                    onTap: () => _selectProduct(product),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 8.0,
-                      ),
-                      child: Container(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: SizedBox(
                         width: 70,
                         height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius:
-                              BorderRadius.circular(4),
-                          border: Border.all(
-                            color: selectedShoe == shoe
-                                ? shoe.color
-                                : Colors.grey.shade300,
-                            width: selectedShoe == shoe
-                                ? 3
-                                : 1,
-                          ),
-                        ),
+                        // decoration: BoxDecoration(
+                        //   color: Colors.grey[200],
+                        //   borderRadius: BorderRadius.circular(4),
+                        //   border: Border.all(
+                        //     color: selectedProduct == product
+                        //         ? product.category_color_id == 'Black'
+                        //               ? Colors.black
+                        //               : Colors.red
+                        //         : Colors.grey.shade300,
+                        //     width: selectedProduct == product ? 3 : 1,
+                        //   ),
+                        // ),
                         child: Center(
-                          child: Container(
+                          child: SizedBox(
                             width: 30,
                             height: 30,
-                            decoration: BoxDecoration(
-                              color: shoe.color,
-                              shape: BoxShape.circle,
-                            ),
+                            // decoration: BoxDecoration(
+                            //   color: product.category_color_id == 'Black'
+                            //       ? Colors.black
+                            //       : Colors.red,
+                            //   shape: BoxShape.circle,
+                            // ),
                           ),
                         ),
                       ),
@@ -257,31 +254,26 @@ class _HomeState extends State<Home>
             ),
 
             //SizedBox(height: 40),
-            Text('발매가 239,000원'),
             Text(
-              '248,000원',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              '발매가 ${selectedProduct.product_price}원',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+
+            Text(
+              '${selectedProduct.product_price}원',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             SizedBox(height: 8),
 
             Text(
-              selectedShoe.name,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
+              selectedProduct.product_id.toString(), //제품명
+              style: const TextStyle(fontSize: 16, color: Colors.black54),
             ),
             SizedBox(height: 4),
             Text(
-              '스니커즈*신발',
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey,
-              ),
+              '{manufacturer_category}:{product_category},',
+              style: TextStyle(fontSize: 11, color: Colors.grey),
             ),
 
             SizedBox(height: 40),
@@ -294,7 +286,7 @@ class _HomeState extends State<Home>
   /*
 Future insertAction() async {
    Product product = Product(
-      category_product_id: '1',
+      category_product_id: '1',2
       category_manufacturer_id: '1',
       category_product_size_id: '1',
       category_color_id: '1',
@@ -305,13 +297,13 @@ Future insertAction() async {
    */
 
   /*
-//전체 상품 목록 조회	
+//전체 상품 목록 조회   
 SELECT * FROM product
-//특정 상품 상세 조회	
+//특정 상품 상세 조회   
 SELECT * FROM product 
 WHERE product_id = ?
-////장바구니 추가	
-///INSERT	INSERT INTO cart (customer_id, product_id, quantity)
+////장바구니 추가   
+///INSERT   INSERT INTO cart (customer_id, product_id, quantity)
 ///VALUES (?, ?, ?)
 */
 }

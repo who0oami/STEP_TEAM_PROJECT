@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_app/util/scolor.dart';
 import 'package:step_app/view/app/forgot_email_page.dart';
 import 'package:step_app/view/app/forgot_password_page.dart';
 import 'package:step_app/view/app/home.dart';
@@ -27,6 +28,11 @@ class _LoginPageState extends State<LoginPage> {
     customerHandler = DatabaseHandlerCustomer();
   }
 
+  // _updateButtonState() {
+  //     isButtonEnabled = emailcontroller.text.isNotEmpty && pwcontroller.text.isNotEmpty;
+  //   setState(() {});
+  // }
+
   @override
   void dispose() {
     emailcontroller.dispose();
@@ -34,16 +40,10 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  // _updateButtonState() {
-  //   setState(() {
-  //     isButtonEnabled = emailcontroller.text.isNotEmpty && pwcontroller.text.isNotEmpty;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: PColor.appBarBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,16 +51,13 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 50),
             Text(
               'STEP',
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
             Text(
               'SMART TERMINAL FOR EVERY PURCHASE',
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.black,
+                color: PColor.appBarForegroundColor,
               ),
             ),
             SizedBox(height: 30),
@@ -68,9 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: emailcontroller,
-                decoration: InputDecoration(
-                  labelText: '이메일주소',
-                ),
+                decoration: InputDecoration(labelText: '이메일주소'),
               ),
             ),
             Padding(
@@ -78,16 +73,14 @@ class _LoginPageState extends State<LoginPage> {
               child: TextField(
                 controller: pwcontroller,
                 //obscureText: true,
-                decoration: InputDecoration(
-                  labelText: '비밀번호',
-                ),
+                decoration: InputDecoration(labelText: '비밀번호'),
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey,
-                foregroundColor: Colors.black,
+                backgroundColor: PColor.buttonPrimary,
+                foregroundColor: PColor.buttonTextColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -106,7 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('회원가입'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
                 ),
                 Text('   |   '),
@@ -116,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('이메일 찾기'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
                 ),
                 Text('   |   '),
@@ -126,7 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text('비밀번호 찾기'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
                 ),
               ],
@@ -139,14 +135,16 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: Text('이용약관'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
                 ),
                 TextButton(
                   onPressed: () {},
                   child: Text('개인정보 처리방침'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    backgroundColor: PColor.buttonPrimary,
+                    foregroundColor: PColor.buttonTextColor,
                   ),
                 ),
               ],
@@ -185,10 +183,7 @@ class _LoginPageState extends State<LoginPage> {
           middleText: '환영합니다.',
           barrierDismissible: false,
           actions: [
-            TextButton(
-              onPressed: () => Get.to(Home()),
-              child: Text("확인"),
-            ),
+            TextButton(onPressed: () => Get.to(Home()), child: Text("확인")),
           ],
         );
       }

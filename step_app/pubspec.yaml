@@ -60,6 +60,9 @@ dependencies:
   # carousel_slider
   carousel_slider: ^5.1.1
 
+  # 웹 화면 필요
+  pluto_grid: ^8.1.0
+
   
 dev_dependencies:
   flutter_test:

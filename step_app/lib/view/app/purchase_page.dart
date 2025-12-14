@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_app/util/scolor.dart';
 import 'package:step_app/view/app/store_finder_page.dart';
 /* 
 Description : 사용자 결제 화면
@@ -25,47 +26,304 @@ class PurchasePage extends StatefulWidget {
 class _PurchasePageState extends State<PurchasePage> {
   // Property
   late TextEditingController branchName; //  매장명
-
+  late bool isBranchSelected; // 픽업 장소 선택 여부
   @override
   void initState() {
     super.initState();
     branchName = TextEditingController();
+    isBranchSelected = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: PColor.baseBackgroundColor,
       appBar: AppBar(
+        backgroundColor: PColor.appBarBackgroundColor,
         title: Text('결제'),
       ),
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "픽업 지정 및 조회",
-            style: TextStyle(
-              fontWeight: FontWeight.bold
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "픽업 지정 및 조회",
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),
             ),
-          ),
-          Container(
-            child: Row(
-              children: [
-                Text('지점'),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () => Get.to(StoreFinderPage()),
-                         icon: Icon(Icons.search)
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                color: PColor.appBarBackgroundColor,
+                borderRadius: BorderRadius.circular(16), // ← 동그랗게
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('지점'),
+                          Text(
+                            '미지정',
+                            style: TextStyle(
+                              color: Colors.grey
+                            ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                              filled: true,
+                              fillColor: const Color.fromARGB(255, 194, 194, 194),
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 2,
+                                horizontal: 12,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () => Get.to(StoreFinderPage()),
+                                 icon: Icon(
+                                  Icons.search,
+                                  color: PColor.appBarBackgroundColor,
+                                  size: 20,
+                                  )
+                                ),
+                            ),
+                          ),
                         ),
-                    ),
+                      )
+                    ],
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ),
-        ],
+            Text(
+              "주문 상품",
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                color: PColor.appBarBackgroundColor,
+                borderRadius: BorderRadius.circular(16), 
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'images/AIR+FORCE+1.png',
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(
+                            "869V (남성,4E) (안전화)",
+                          style: TextStyle(
+                          fontWeight: FontWeight.bold),),
+                          Text('new balence'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "280 SIZE",
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                              Text(
+                                "/",
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                              Text(
+                                "191,000 원",
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                            ],
+                          ),
+                        ],
+                      ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                  color: PColor.appBarBackgroundColor,
+                  borderRadius: BorderRadius.circular(16), 
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          'images/AIR+FORCE+1.png',
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              "869V (남성,4E) (안전화)",
+                            style: TextStyle(
+                            fontWeight: FontWeight.bold),),
+                            Text('new balence'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "280 SIZE",
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold),),
+                                Text(
+                                  "/",
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold),),
+                                Text(
+                                  "191,000 원",
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ),
+                    ],
+                  ),
+                ),
+            ),
+            Text(
+              "최종 주문 정보",
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                color: PColor.appBarBackgroundColor,
+                borderRadius: BorderRadius.circular(16), 
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('구매가 합계'),
+                              Text("182,000 원"), 
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('수수료'),
+                              Text('6,000 원'),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('총 결제금액'),
+                              Text('191,000 원'), 
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      Divider(),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                       Text(
+                        '총 결제금액',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                       Text(
+                        '221,000원',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+        bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          height: 50,
+          child: ElevatedButton(
+            onPressed: isBranchSelected
+                ? () {
+                    // 결제 완료 페이지로 이동
+                  }
+                : null, // null이면 버튼 비활성화
+        style: ElevatedButton.styleFrom(
+        backgroundColor: isBranchSelected ? Colors.blue : Colors.grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        ),
+        child: Text(
+          '결제하기',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    ),
+  ),
+
     );
   }
 }
