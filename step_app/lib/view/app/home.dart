@@ -7,7 +7,6 @@ import 'package:step_app/view/app/product_page/home_tab_third_page.dart';
 import 'package:step_app/vm/seeds/seed_branch.dart';
 import 'package:step_app/vm/seeds/seed_category_color.dart';
 import 'package:step_app/vm/seeds/seed_category_manufacturer.dart';
-import 'package:step_app/vm/seeds/seed_category_product.dart';
 import 'package:step_app/vm/seeds/seed_category_size.dart';
 import 'package:step_app/vm/seeds/seed_customer.dart';
 import 'package:step_app/vm/seeds/seed_emplyee.dart';
@@ -44,10 +43,8 @@ class _HomeState extends State<Home>
     SeedCategorySize.insertSeed();
     SeedCategoryColor.insertSeed();
     SeedCategoryManufacturer.insertSeed();
-    SeedProduct.insertSeed();
     SeedManufacturer.insertSeed();
     SeedEmployee.insertSeed();
-    SeedProduct.insertSeed();
     SeedCustomer.insertSeed();
     super.dispose();
   }
