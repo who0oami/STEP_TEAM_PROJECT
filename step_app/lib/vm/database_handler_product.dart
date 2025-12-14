@@ -13,7 +13,7 @@ class DatabaseHandlerProduct {
       insert into product (
 
         category_manufacturer_id,
-        category_product_size_id,
+        category_size_id,
         category_color_id,
         product_price,
         product_quantity,
@@ -23,7 +23,7 @@ class DatabaseHandlerProduct {
       ''',
       [
         product.category_manufacturer_id,
-        product.category_product_size_id,
+        product.category_size_id,
         product.category_color_id,
         product.product_price,
         product.product_quantity,
@@ -103,7 +103,7 @@ class DatabaseHandlerProduct {
       ''',
       [
         product.category_manufacturer_id,
-        product.category_product_size_id,
+        product.category_size_id,
         product.category_color_id,
         product.product_price,
         product.product_quantity,

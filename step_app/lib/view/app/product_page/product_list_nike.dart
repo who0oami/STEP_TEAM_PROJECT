@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:step_app/vm/database_handler_product.dart';
 import 'package:step_app/vm/seeds/seed_product.dart';
 
-class ProductListSneakers extends StatefulWidget {
-  const ProductListSneakers({super.key});
+class ProductListNike extends StatefulWidget {
+  const ProductListNike({super.key});
 
   @override
-  State<ProductListSneakers> createState() =>
-      _ProductListSneakersState();
+  State<ProductListNike> createState() =>
+      _ProductListNikeState();
 }
 
-class _ProductListSneakersState
-    extends State<ProductListSneakers> {
+class _ProductListNikeState
+    extends State<ProductListNike> {
   final DatabaseHandlerProduct handler =
       DatabaseHandlerProduct();
 
@@ -21,30 +21,41 @@ class _ProductListSneakersState
   @override
   void initState() {
     super.initState();
-    Future<void> loadProducts() async {
-      final result = await handler
-          .queryProductsByManufacturer(1); // 1 = NIKE
+    _init();
+  }
 
-      setState(() {
-        products = result;
-        isLoading = false;
-      });
-    }
+  Future<void> _init() async {
+    // ✅ seed 먼저 (1회만 실행되게 만드는 게 이상적이지만,
+    // 발표용이라 그냥 호출해도 됨)
+    await SeedProduct.insertSeed();
+
+    // ✅ 그 다음 로드
+    await loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    final result = await handler
+        .queryProductsByManufacturer(1); // 1 = NIKE
+
+    setState(() {
+      products = result;
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (products.isEmpty) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: Text(
-            '등록된 스니커즈 상품이 없습니다',
+            '등록된 NIKE 상품이 없습니다',
             style: TextStyle(color: Colors.grey),
           ),
         ),
@@ -53,15 +64,15 @@ class _ProductListSneakersState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SNEAKERS'),
+        title: Text('NIKE'),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: GridView.builder(
           itemCount: products.length,
           gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
+              SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
@@ -74,7 +85,6 @@ class _ProductListSneakersState
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
-                // 이미지 (지금은 더미)
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -83,7 +93,7 @@ class _ProductListSneakersState
                       ),
                       color: Colors.grey.shade200,
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         'IMAGE',
                         style: TextStyle(
@@ -94,37 +104,32 @@ class _ProductListSneakersState
                   ),
                 ),
 
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
 
-                // ✅ 제품명
-                // 제품명 (임시)
                 Text(
-                  'NIKE 상품',
-                  style: const TextStyle(
+                  'NIKE',
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
-                // 제조사
-                const Text(
-                  'NIKE',
+                Text(
+                  '사이즈 ${product['product_size_id']}',
                   style: TextStyle(fontSize: 12),
                 ),
 
-                // 가격
                 Text(
-                  '${product['product_price']}원',
-                  style: const TextStyle(
+                  '가격 : ${product['product_price']}원',
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
 
-                // 컬러 ID (임시)
                 Text(
-                  '컬러 ID: ${product['category_color_id']}',
-                  style: const TextStyle(fontSize: 12),
+                  '컬러 : ${product['category_color_id']}',
+                  style: TextStyle(fontSize: 12),
                 ),
               ],
             );

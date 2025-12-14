@@ -104,7 +104,7 @@ class AppDatabase {
           CREATE TABLE product (
             product_id INTEGER PRIMARY KEY AUTOINCREMENT,
             category_manufacturer_id INTEGER NOT NULL,
-            category_product_size_id INTEGER NOT NULL,
+            category_size_id INTEGER NOT NULL,
             category_color_id INTEGER NOT NULL,
             product_price REAL NOT NULL,
             product_quantity INTEGER NOT NULL,
