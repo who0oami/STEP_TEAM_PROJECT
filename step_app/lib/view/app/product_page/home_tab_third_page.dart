@@ -2,18 +2,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_app/util/scolor.dart';
-import 'package:step_app/view/app/product_page/product_list_boots.dart';
-import 'package:step_app/view/app/product_page/product_list_slip.dart';
-import 'package:step_app/view/app/product_page/product_list_sneakers.dart';
+import 'package:step_app/view/app/product_page/product_list_newbalance.dart';
+import 'package:step_app/view/app/product_page/product_list_nike.dart';
 
 class HomeTabThirdPage extends StatefulWidget {
   const HomeTabThirdPage({super.key});
 
   @override
-  State<HomeTabThirdPage> createState() => _HomeTabThirdPageState();
+  State<HomeTabThirdPage> createState() =>
+      _HomeTabThirdPageState();
 }
 
-class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
+class _HomeTabThirdPageState
+    extends State<HomeTabThirdPage> {
   // property
   int _currentIndex = 0;
   final List<String> bannerImages = [
@@ -47,10 +48,17 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                   ),
                   items: bannerImages.map((imagePath) {
                     return Container(
-                      width: MediaQuery.of(context).size.width - 32,
-                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      width:
+                          MediaQuery.of(
+                            context,
+                          ).size.width -
+                          32,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                      ),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius:
+                            BorderRadius.circular(10),
                         image: DecorationImage(
                           image: AssetImage(imagePath),
                           fit: BoxFit.cover,
@@ -64,21 +72,34 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                 Positioned(
                   bottom: 12,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(bannerImages.length, (index) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        width: _currentIndex == index ? 10 : 8,
-                        height: _currentIndex == index ? 10 : 8,
-                        decoration: BoxDecoration(
-                          color: _currentIndex == index
-                              ? Colors.black
-                              : PColor.buttonGray,
-                          shape: BoxShape.circle,
-                        ),
-                      );
-                    }),
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: List.generate(
+                      bannerImages.length,
+                      (index) {
+                        return AnimatedContainer(
+                          duration: const Duration(
+                            milliseconds: 300,
+                          ),
+                          margin:
+                              const EdgeInsets.symmetric(
+                                horizontal: 3,
+                              ),
+                          width: _currentIndex == index
+                              ? 10
+                              : 8,
+                          height: _currentIndex == index
+                              ? 10
+                              : 8,
+                          decoration: BoxDecoration(
+                            color: _currentIndex == index
+                                ? Colors.black
+                                : PColor.buttonGray,
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -89,7 +110,8 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
             SizedBox(
               height: 150,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
                     children: [
@@ -97,12 +119,14 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                       GestureDetector(
                         onTap: () {
                           // print('sneakers 탭 클릭됨');
-                          Get.to(ProductListSneakers());
+                          Get.to(ProductListNike());
                         },
                         child: Container(
                           width: 100,
                           height: 100,
-                          padding: EdgeInsets.all(3), // 테두리 두께
+                          padding: EdgeInsets.all(
+                            3,
+                          ), // 테두리 두께
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -122,7 +146,7 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                       TextButton(
                         onPressed: () {
                           print('sneakers 탭 클릭됨');
-                          Get.to(ProductListSneakers());
+                          Get.to(ProductListNike());
                         },
                         child: Text('sneakers'),
                       ),
@@ -133,12 +157,14 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Get.to(ProductListBoots());
+                          Get.to(ProductListNewbalance());
                         },
                         child: Container(
                           width: 100,
                           height: 100,
-                          padding: EdgeInsets.all(3), // 테두리 두께
+                          padding: EdgeInsets.all(
+                            3,
+                          ), // 테두리 두께
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -156,43 +182,9 @@ class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.to(ProductListBoots());
+                          Get.to(ProductListNewbalance());
                         },
                         child: Text('boots'),
-                      ),
-                    ],
-                  ),
-                  // === 3번 아이콘 ===
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(ProductListSlip());
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          padding: EdgeInsets.all(2), // 테두리 두께
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: PColor.buttonGray,
-                              width: 3,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              'images/AIR+FORCE+5.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.to(ProductListSlip());
-                        },
-                        child: Text('slip'),
                       ),
                     ],
                   ),
