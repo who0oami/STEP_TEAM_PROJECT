@@ -11,7 +11,7 @@ class DatabaseHandlerProduct {
     return await db.rawInsert(
       '''
       insert into product (
-        category_product_id,
+
         category_manufacturer_id,
         category_product_size_id,
         category_color_id,
@@ -19,10 +19,9 @@ class DatabaseHandlerProduct {
         product_quantity,
         product_image
       )
-      values (?,?,?,?,?,?,?)
+      values (?,?,?,?,?,?)
       ''',
       [
-        product.category_product_id,
         product.category_manufacturer_id,
         product.category_product_size_id,
         product.category_color_id,
@@ -45,32 +44,6 @@ class DatabaseHandlerProduct {
   }
 
   //query(이름, 카테고리 조회)
-  Future<List<Map<String, dynamic>>>
-  querySneakersWithInfo() async {
-    final db = await AppDatabase.instance.db;
-    final result = await db.rawQuery('''
-  SELECT
-    p.product_id,
-    p.product_price,
-    p.product_quantity,
-
-    m.category_manufacturer_name AS manufacturer_name,
-    c.category_color_name AS color_name,
-    cp.category_product_name AS product_name
-
-  FROM product p
-  JOIN categorymanufacturer m
-    ON p.category_manufacturer_id = m.category_manufacturer_id
-  JOIN categorycolor c
-    ON p.category_color_id = c.category_color_id
-  JOIN categoryproduct cp
-    ON p.category_product_id = cp.category_product_id
-
-  WHERE p.category_product_id = 2
-''');
-
-    return result;
-  }
 
   // =====================
   // QUERY (ID로 조회)
@@ -87,22 +60,6 @@ class DatabaseHandlerProduct {
   }
 
   // 카테고리 조회
-  Future<List<Product>> queryProductsByCategory(
-    int categoryId,
-  ) async {
-    final db = await AppDatabase.instance.db;
-
-    final List<Map<String, dynamic>> result = await db
-        .rawQuery(
-          '''
-    SELECT * FROM product
-    WHERE category_product_id = ?
-    ''',
-          [categoryId],
-        );
-
-    return result.map((e) => Product.fromMap(e)).toList();
-  }
 
   // =====================
   // UPDATE
@@ -120,7 +77,6 @@ class DatabaseHandlerProduct {
       '''
       update product
       set
-        category_product_id = ?,
         category_manufacturer_id = ?,
         category_size_id = ?,
         category_color_id = ?,
@@ -130,7 +86,6 @@ class DatabaseHandlerProduct {
       where product_id = ?
       ''',
       [
-        product.category_product_id,
         product.category_manufacturer_id,
         product.category_product_size_id,
         product.category_color_id,

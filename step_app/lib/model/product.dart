@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 class Product {
   final int? product_id; // 제품 번호_자동 증가 Primary Key
-  final int category_product_id; // 제품 카테고리 id
   final int category_manufacturer_id; // 제조사 카테고리 id
   final int category_product_size_id; // 사이즈 카테고리 id
   final int category_color_id; // 색상 카테고리 id
@@ -11,7 +10,6 @@ class Product {
   final Uint8List product_image; // 제품 이미지
   Product({
     this.product_id,
-    required this.category_product_id,
     required this.category_manufacturer_id,
     required this.category_product_size_id,
     required this.category_color_id,
@@ -22,7 +20,6 @@ class Product {
 
   Product.fromMap(Map<String, dynamic> res)
     : product_id = res['product_id'],
-      category_product_id = res['category_product_id'],
       category_manufacturer_id =
           res['category_manufacturer_id'],
       category_product_size_id =

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:step_app/model/product.dart';
 import 'package:step_app/vm/database_handler_product.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +12,6 @@ class SeedProduct {
       // NIKE
       // =================
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 1,
         category_product_size_id: 250,
         category_color_id: 2, // WHITE
@@ -22,7 +20,6 @@ class SeedProduct {
         product_image: Uint8List(0),
       ),
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 1,
         category_product_size_id: 260,
         category_color_id: 1, // BLACK
@@ -35,7 +32,6 @@ class SeedProduct {
       // ADIDAS
       // =================
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 2,
         category_product_size_id: 250,
         category_color_id: 4, // RED
@@ -44,7 +40,6 @@ class SeedProduct {
         product_image: Uint8List(0),
       ),
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 2,
         category_product_size_id: 265,
         category_color_id: 5, // BLUE
@@ -57,7 +52,6 @@ class SeedProduct {
       // NEW BALANCE
       // =================
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 3,
         category_product_size_id: 255,
         category_color_id: 3, // GRAY
@@ -66,7 +60,6 @@ class SeedProduct {
         product_image: Uint8List(0),
       ),
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 3,
         category_product_size_id: 270,
         category_color_id: 1, // BLACK
@@ -79,7 +72,6 @@ class SeedProduct {
       // PUMA
       // =================
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 4,
         category_product_size_id: 255,
         category_color_id: 6, // GREEN
@@ -88,7 +80,6 @@ class SeedProduct {
         product_image: Uint8List(0),
       ),
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 4,
         category_product_size_id: 265,
         category_color_id: 1, // BLACK
@@ -101,7 +92,6 @@ class SeedProduct {
       // CONVERSE
       // =================
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 5,
         category_product_size_id: 250,
         category_color_id: 2, // WHITE
@@ -110,7 +100,6 @@ class SeedProduct {
         product_image: Uint8List(0),
       ),
       Product(
-        category_product_id: 1,
         category_manufacturer_id: 5,
         category_product_size_id: 270,
         category_color_id: 7, // BROWN
@@ -121,9 +110,6 @@ class SeedProduct {
     ];
 
     for (var p in products) {
-      debugPrint(
-        '🔥 inserting product: ${p.category_product_id}',
-      );
       await dbHandler.insertProduct(p);
     }
   }
