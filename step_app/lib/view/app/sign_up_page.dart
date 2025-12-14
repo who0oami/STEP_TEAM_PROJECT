@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/get_utils/get_utils.dart';
+import 'package:step_app/model/customer.dart';
 import 'package:step_app/util/message.dart';
 import 'package:step_app/util/scolor.dart';
 import 'package:step_app/vm/database_handler_customer.dart';
@@ -48,6 +49,10 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
+  _updateAllCheck() {
+    all = fourteen && use && collect && marketing;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,13 +74,22 @@ class _SignUpPageState extends State<SignUpPage> {
               Text('이메일 주소'),
               TextField(controller: emailcontroller),
               Text('비밀번호'),
-              TextField(controller: pwcontroller),
+              TextField(
+                controller: pwcontroller,
+                obscureText: true,
+              ),
               Text('비밀번호 확인'),
-              TextField(controller: pwcheckcontroller),
+              TextField(
+                controller: pwcheckcontroller,
+                obscureText: true,
+              ),
               Text('이름'),
               TextField(controller: namecontroller),
               Text('전화번호'),
-              TextField(controller: phonecontroller),
+              TextField(
+                controller: phonecontroller,
+                keyboardType: TextInputType.phone,
+              ),
               SizedBox(height: 50),
               //Checkbox(value: value, onChanged: onChanged)
               Row(
@@ -93,6 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     value: fourteen,
                     onChanged: (value) {
                       fourteen = value!;
+                      _updateAllCheck();
                       setState(() {});
                     },
                   ),
@@ -105,6 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     value: use,
                     onChanged: (value) {
                       use = value!;
+                      _updateAllCheck();
                       setState(() {});
                     },
                   ),
@@ -117,6 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     value: collect,
                     onChanged: (value) {
                       collect = value!;
+                      _updateAllCheck();
                       setState(() {});
                     },
                   ),
@@ -129,6 +146,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     value: marketing,
                     onChanged: (value) {
                       marketing = value!;
+                      _updateAllCheck();
                       setState(() {});
                     },
                   ),
@@ -166,27 +184,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  // _toggleIndividual(bool? value, String type) {
-  //   if (value != null) {
-  //     setState(() {
-  //       if (type == 'fourteen') fourteen = value;
-  //       if (type == 'use') use = value;
-  //       if (type == 'collect') collect = value;
-  //       if (type == 'marketing') marketing = value;
-
-  //       if (!value) {
-  //         all = false;
-  //       } else if (fourteen &&
-  //           use &&
-  //           collect &&
-  //           marketing) {
-  //         all = true;
-  //       }
-  //     });
-  //   }
-  // }
-
-  _signUp() {
+  _signUp() async {
     if (emailcontroller.text.isEmpty ||
         pwcontroller.text.isEmpty ||
         pwcheckcontroller.text.isEmpty ||
@@ -196,21 +194,24 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    if (!GetUtils.isEmail(emailcontroller.text)) {
+    if (!GetUtils.isEmail(emailcontroller.text.trim())) {
       msg.snackBar('이메일 형식 오류', '유효한 이메일 주소를 입력해주세요.');
       return;
     }
 
-    if (pwcontroller.text != pwcheckcontroller.text) {
+    if (pwcontroller.text.trim() !=
+        pwcheckcontroller.text.trim()) {
       msg.snackBar('비밀번호 오류', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       return;
     }
 
-    // final exists = await customerHandler.checkEmailExists(emailcontroller.text.trim());
-    // if (exists) {
-    //   msg.showDialog('가입 실패', '이미 존재하는 이메일 주소입니다.');
-    //   return;
-    // }
+    final exists = await customerHandler.checkEmailExists(
+      emailcontroller.text.trim(),
+    );
+    if (exists) {
+      msg.showDialog('가입 실패', '이미 존재하는 이메일 주소입니다.');
+      return;
+    }
 
     if (!fourteen || !use || !collect) {
       msg.showDialog(
@@ -220,56 +221,29 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    /*
-    //
     Customer customer = Customer(
-      CustomerEmail: emailcontroller.text.trim(),
-      CustomerPw: pwcontroller.text.trim(),
-      CustomerName: namecontroller.text.trim(),
-      CustomerPhone: phonecontroller.text.trim(),
+      customer_email: emailcontroller.text.trim(),
+      customer_pw: pwcontroller.text.trim(),
+      customer_name: namecontroller.text.trim(),
+      customer_phone: phonecontroller.text.trim(),
+      customer_address: '',
+      customer_image: null,
+      customer_lat: null,
+      customer_lng: null,
     );
-    
-    final result = await customerHandler.insertCustomer(customer);
-    
+    final result = await customerHandler.insertCustomer(
+      customer,
+    );
     if (result > 0) {
       msg.showDialog(
         '회원가입 완료',
         '${namecontroller.text}님, 회원가입을 축하드립니다!',
       );
     } else {
-      msg.showDialog('오류 발생', '회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      msg.showDialog(
+        '오류 발생',
+        '회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.',
+      );
     }
-    */
-
-    msg.showDialog(
-      '회원가입 완료',
-      '${namecontroller.text}님, 회원가입을 축하드립니다!',
-    );
   }
-
-  /*
-Future insertAction() async {
-    Customer customer = Customer(
-      CustomerEmail: _emailTextEditingController.text.trim(),
-      CustomerPw: _pwTextEditingController.text.trim(),
-      CustomerName: _nameTextEditingController.text.trim(),
-      CustomerPhone: _phoneTextEditingController.text.trim(),
-      //CustomerAddress: _addressData,
-      //CustomerImage: _imageData,
-      //CustomerLat: _latData,
-      //CustomerLng: _lngData,
-      //initDate: DateTime.now().toString(),
-    );
-   */
-
-  /*
-  //가입
-  INSERTINSERT INTO customer 
-  (customer_email, customer_pw, customer_name, customer_phone) 
-  VALUES (?, ?, ?, ?)
-
-  //중복 이메일 확인
-  SELECTSELECT customer_id FROM customer 
-  WHERE customer_email = ?
-   */
 }

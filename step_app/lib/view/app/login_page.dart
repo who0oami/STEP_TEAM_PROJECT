@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(18.0),
               child: TextField(
                 controller: emailcontroller,
                 decoration: InputDecoration(
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(18.0),
               child: TextField(
                 controller: pwcontroller,
                 obscureText: true,
