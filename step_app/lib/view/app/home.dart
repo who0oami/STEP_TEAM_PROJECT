@@ -12,7 +12,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home>
+    with SingleTickerProviderStateMixin {
   // property
   late TabController tabController;
   late TextEditingController searchController;
@@ -61,10 +62,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ),
 
                         border: UnderlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 10,
-                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 10,
+                            ),
                       ),
                       onSubmitted: (value) {
                         //
@@ -79,7 +81,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     onPressed: () {
                       // Get.to(loginPage());
                     },
-                    icon: Icon(Icons.shopping_bag_outlined, size: 28),
+                    icon: Icon(
+                      Icons.shopping_bag_outlined,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(width: 4),
                   // 두 번째 아이콘 (로그인)
@@ -96,7 +101,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             //  TabBar
             Container(
               height: 50,
-              color: const Color.fromARGB(255, 255, 227, 145),
+              color: const Color.fromARGB(
+                255,
+                255,
+                227,
+                145,
+              ),
               child: TabBar(
                 controller: tabController,
                 labelColor: Colors.black,
