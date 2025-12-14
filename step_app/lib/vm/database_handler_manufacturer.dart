@@ -1,45 +1,29 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_app/model/manufacturer.dart';
+import 'package:step_app/vm/app_database.dart';
 
 class DatabaseHandlerManufacturer {
-  Future<Database> initializedDB() async {
-    String path = await getDatabasesPath();
-
-    return openDatabase(
-      join(path, 'step.db'),
-      onCreate: (db, version) async {
-        await db.execute("""
-            create table manufacturer
-            (manufacturer_id integer primary key autoincrement,
-            manufacturer_name text,
-            manufacturer_phone text
-            )
-            """);
-      },
-      version: 1,
-    );
-  }
-
   // Insert
   Future<int> insertManufacturer(Manufacturer manufacturer) async {
     int result = 0;
-    final Database db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     result = await db.rawInsert(
       """insert into manufacturer
         (manufacturer_name, manufacturer_phone)
         values
         (?,?)
       """,
-      [manufacturer.manufacturer_name, manufacturer.manufacturer_phone],
+      [
+        manufacturer.manufacturer_name,
+        manufacturer.manufacturer_phone,
+      ],
     );
     return result;
   }
 
   // Query
-
   Future<List<Manufacturer>> queryManufacturer() async {
-    final Database db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
       """Select * from manufacturer""",
     );
@@ -49,7 +33,7 @@ class DatabaseHandlerManufacturer {
   // Update
   Future<int> updateManufacturer(Manufacturer manufacturer) async {
     int result = 0;
-    final Database db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     result = await db.rawUpdate(
       """
         update manufacturer
@@ -66,9 +50,8 @@ class DatabaseHandlerManufacturer {
   }
 
   // Delete
-
   Future<void> deleteManufacturer(int Manufacturer_id) async {
-    final Database db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     await db.rawDelete(
       """
       delete

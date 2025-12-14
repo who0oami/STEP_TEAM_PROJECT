@@ -1,86 +1,63 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_app/model/branch.dart';
+import 'package:step_app/vm/app_database.dart';
 
 class BranchHandler {
-  /*
-  ** Model 내용 
-  int? branch_id;
-  String branch_name;
-  String branch_phone;
-  String branch_location;
-  double branch_lat;
-  double branch_lng;
-  */
-    
-// Connection 및 Table Creation
-  Future<Database> initializeDB() async{
-    String path = await getDatabasesPath();
-    return openDatabase(
-      join(path, 'step.db'),
-      onCreate: (db, version) async{
-        await db.execute(
-          """
-          create table branch
-          (
-            branch_id integer primary key autoincrement,
-            branch_name text,
-            branch_phone text,
-            branch_location text,
-            branch_lat real,
-            branch_lat real
-          )
-          """
-        );
-      },
-      version: 1,
-    );
-  } // initialDB
-
-// 입력
-  Future<int> insertBranch(Branch branch) async{
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
+  // 입력
+  Future<int> insertBranch(Branch branch) async {
+    final Database db = await AppDatabase.instance.db; // ✅ 여기만 변경
+    return await db.rawInsert(
       """
       insert into branch
-      (branch_name, branch_phone, branch_location, branch_lat, branch_lat)
+      (branch_name, branch_phone, branch_location, branch_lat, branch_lng)
       values
       (?,?,?,?,?)
       """,
-      [branch.branch_name, branch.branch_phone, branch.branch_lat, branch.branch_lng]
+      [
+        branch.branch_name,
+        branch.branch_phone,
+        branch.branch_location,
+        branch.branch_lat,
+        branch.branch_lng,
+      ],
     );
-    return result;
-  } // insertBranch
+  }
 
-  // 검색 
+  // 검색
   Future<List<Branch>> queryBranch() async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult =
-        await db.rawQuery('select * from branch');
+    final Database db = await AppDatabase.instance.db; // ✅ 여기만 변경
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from branch',
+    );
     return queryResult.map((e) => Branch.fromMap(e)).toList();
-  } // queryBranch
+  }
 
-  // 수정 
-  Future<int> updateBranch(Branch branch) async{
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawUpdate(
+  // 수정
+  Future<int> updateBranch(Branch branch) async {
+    final Database db = await AppDatabase.instance.db; // ✅ 여기만 변경
+    return await db.rawUpdate(
       """
       update branch
-      set branch_name = ?, branch_phone = ?, branch_location =?, branch_lat = ?, branch_lng = ?
+      set branch_name = ?, branch_phone = ?, branch_location = ?, branch_lat = ?, branch_lng = ?
       where branch_id = ?
       """,
-      [branch.branch_name, branch.branch_phone, branch.branch_location, branch.branch_lat, branch.branch_lng, branch.branch_id]
+      [
+        branch.branch_name,
+        branch.branch_phone,
+        branch.branch_location,
+        branch.branch_lat,
+        branch.branch_lng,
+        branch.branch_id,
+      ],
     );
-
-    return result;
-  } // updateBranch
+  }
 
   // 삭제
-  Future deleteBranch(int branch_id) async {
-    final Database db = await initializeDB();
-    await db.rawDelete('delete from branch where branch_id = ?', [branch_id]);
-  } // deleteBranch
-
-} //class
+  Future<int> deleteBranch(int branch_id) async {
+    final Database db = await AppDatabase.instance.db; // ✅ 여기만 변경
+    return await db.rawDelete(
+      'delete from branch where branch_id = ?',
+      [branch_id],
+    );
+  }
+}

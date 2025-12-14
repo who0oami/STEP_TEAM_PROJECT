@@ -1,37 +1,13 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_app/model/customer.dart';
+import 'package:step_app/vm/app_database.dart';
 
 class DatabaseHandlerCustomer {
-  Future<Database> initializedDB() async {
-    final String path = await getDatabasesPath();
-
-    return openDatabase(
-      join(path, 'step.db'),
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          create table customer (
-            customer_id integer primary key autoincrement,
-            customer_name text not null,
-            customer_phone text not null,
-            customer_pw text not null,
-            customer_email text not null,
-            customer_address text not null,
-            customer_image text,
-            customer_lat real,
-            customer_lng real
-          )
-        ''');
-      },
-    );
-  }
-
   // =====================
   // INSERT
   // =====================
   Future<int> insertCustomer(Customer customer) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     return await db.rawInsert(
       '''
       insert into customer
@@ -97,9 +73,10 @@ Future<bool> checkEmailExists(String email) async {
   // QUERY (전체 조회)
   // =====================
   Future<List<Customer>> queryCustomer() async {
-    final db = await initializedDB();
-    final List<Map<String, Object?>> result = await db
-        .rawQuery('select * from customer');
+    final Database db = await AppDatabase.instance.db;
+    final List<Map<String, Object?>> result = await db.rawQuery(
+      'select * from customer',
+    );
 
     return result.map((e) => Customer.fromMap(e)).toList();
   }
@@ -108,7 +85,7 @@ Future<bool> checkEmailExists(String email) async {
   // QUERY (ID로 조회)
   // =====================
   Future<Customer?> getCustomerById(int customer_id) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     final result = await db.rawQuery(
       'select * from customer where customer_id = ?',
       [customer_id],
@@ -118,11 +95,8 @@ Future<bool> checkEmailExists(String email) async {
     return Customer.fromMap(result.first);
   }
 
-  Future<Customer?> hasCustomer(
-    String email,
-    String pw,
-  ) async {
-    final db = await initializedDB();
+  Future<Customer?> hasCustomer(String email, String pw) async {
+    final Database db = await AppDatabase.instance.db;
     final result = await db.rawQuery(
       'select * from customer where customer_email = ? and customer_pw = ?',
       [email, pw],
@@ -136,7 +110,7 @@ Future<bool> checkEmailExists(String email) async {
   // UPDATE
   // =====================
   Future<int> updateCustomer(Customer customer) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     return await db.rawUpdate(
       '''
       update customer
@@ -169,7 +143,7 @@ Future<bool> checkEmailExists(String email) async {
   // DELETE
   // =====================
   Future<int> deleteCustomer(int customer_id) async {
-    final db = await initializedDB();
+    final Database db = await AppDatabase.instance.db;
     return await db.rawDelete(
       'delete from customer where customer_id = ?',
       [customer_id],
