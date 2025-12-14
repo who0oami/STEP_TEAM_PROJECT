@@ -1,9 +1,39 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_app/util/scolor.dart';
-import 'package:step_app/view/app/product_page/product_list_newbalance.dart';
-import 'package:step_app/view/app/product_page/product_list_nike.dart';
+import 'package:step_app/vm/database_handler_product.dart';
+
+final List<String> nikeImages = [
+  'images/nike01.png',
+  'images/nike02.png',
+  'images/nike03.png',
+  'images/nike04.png',
+  'images/nike05.png',
+  'images/nike06.png',
+  'images/nike07.png',
+  'images/nike08.png',
+  'images/nike09.png',
+  'images/nike10.png',
+  'images/nike11.png',
+];
+
+final List<String> newImages = [
+  'images/new01.png',
+  'images/new02.png',
+  'images/new03.png',
+  'images/new04.png',
+  'images/new05.png',
+  'images/new06.png',
+  'images/new07.png',
+  'images/new08.png',
+  'images/new09.png',
+  'images/new10.png',
+  'images/new11.png',
+  'images/new12.png',
+  'images/new13.png',
+  'images/new14.png',
+  'images/new15.png',
+  'images/new16.png',
+];
 
 class HomeTabSecondPage extends StatefulWidget {
   const HomeTabSecondPage({super.key});
@@ -15,183 +45,117 @@ class HomeTabSecondPage extends StatefulWidget {
 
 class _HomeTabSecondPageState
     extends State<HomeTabSecondPage> {
-  // property
-  int _currentIndex = 0;
-  final List<String> bannerImages = [
-    'images/AIR+FORCE+3.png',
-    'images/AIR+FORCE+7.png',
-    'images/model.png',
-  ];
+  final DatabaseHandlerProduct handler =
+      DatabaseHandlerProduct();
+
+  List<Map<String, dynamic>> products = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    final result = await handler
+        .queryProductsSizeOver255();
+    setState(() {
+      products = result;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (products.isEmpty) {
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            '사이즈 255 이상 상품이 없습니다',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-        child: Column(
-          children: [
-            // 이미지 캐러셀(s)
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                // 🔹 Carousel
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 350.0,
-                    autoPlay: true,
-                    viewportFraction: 0.9,
-                    enlargeCenterPage: true,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                  ),
-                  items: bannerImages.map((imagePath) {
-                    return Container(
-                      width:
-                          MediaQuery.of(
-                            context,
-                          ).size.width -
-                          32,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                      ),
+        padding: const EdgeInsets.all(12),
+        child: GridView.builder(
+          itemCount: products.length,
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.7,
+              ),
+          itemBuilder: (context, index) {
+            final product = products[index];
+
+            return GestureDetector(
+              onTap: () {
+                //
+              },
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: AssetImage(imagePath),
+                        color: Colors.grey.shade200,
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          newImages[index %
+                              newImages.length],
                           fit: BoxFit.cover,
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
-
-                // 🔹 고정된 indicator (움직이지 않음)
-                Positioned(
-                  bottom: 12,
-                  child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: List.generate(
-                      bannerImages.length,
-                      (index) {
-                        return AnimatedContainer(
-                          duration: const Duration(
-                            milliseconds: 300,
-                          ),
-                          margin:
-                              const EdgeInsets.symmetric(
-                                horizontal: 3,
-                              ),
-                          width: _currentIndex == index
-                              ? 10
-                              : 8,
-                          height: _currentIndex == index
-                              ? 10
-                              : 8,
-                          decoration: BoxDecoration(
-                            color: _currentIndex == index
-                                ? Colors.black
-                                : PColor.buttonGray,
-                            shape: BoxShape.circle,
-                          ),
-                        );
-                      },
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            // 이미지 캐러셀(e)
-            SizedBox(height: 30),
-            SizedBox(
-              height: 150,
-              child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      // === 1번 아이콘 ===
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(ProductListNike());
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          padding: EdgeInsets.all(
-                            3,
-                          ), // 테두리 두께
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: PColor.buttonGray,
-                              width: 3,
-                            ),
-                          ),
-
-                          child: ClipOval(
-                            child: Image.asset(
-                              'images/AIR+FORCE+4.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.to(ProductListNike());
-                        },
-                        child: Text('sneakers'),
-                      ),
-                    ],
+                  SizedBox(height: 6),
+                  Text(
+                    manufacturerName(
+                      product['category_manufacturer_id'],
+                    ),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  // === 2번 아이콘 ===
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(ProductListNewbalance());
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          padding: EdgeInsets.all(
-                            3,
-                          ), // 테두리 두께
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: PColor.buttonGray,
-                              width: 3,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              'images/AIR+FORCE+1.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.to(ProductListNewbalance());
-                        },
-                        child: Text('Newbalance'),
-                      ),
-                    ],
+                  Text(
+                    '사이즈 ${product['category_size_id']}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${product['product_price']}원',
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
+  } // build
+
+  String manufacturerName(int id) {
+    const map = {1: 'NIKE', 2: 'NEW BALANCE'};
+    return map[id] ?? 'UNKNOWN';
   }
-}
+} // class
