@@ -21,24 +21,15 @@ class _ProductListSneakersState
   @override
   void initState() {
     super.initState();
-    _init();
-  }
+    Future<void> loadProducts() async {
+      final result = await handler
+          .queryProductsByManufacturer(1); // 1 = NIKE
 
-  Future<void> _init() async {
-    // ✅ seed 먼저 (1회만)
-    await SeedProduct.insertSeed();
-
-    // ✅ 데이터 로드
-    await loadProducts();
-  }
-
-  Future<void> loadProducts() async {
-    final result = await handler.querySneakersWithInfo();
-
-    setState(() {
-      products = result;
-      isLoading = false;
-    });
+      setState(() {
+        products = result;
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -106,23 +97,22 @@ class _ProductListSneakersState
                 const SizedBox(height: 6),
 
                 // ✅ 제품명
+                // 제품명 (임시)
                 Text(
-                  product['product_name'],
+                  'NIKE 상품',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
 
-                // ✅ 제조사명
-                Text(
-                  product['manufacturer_name'],
-                  style: const TextStyle(fontSize: 12),
+                // 제조사
+                const Text(
+                  'NIKE',
+                  style: TextStyle(fontSize: 12),
                 ),
 
-                // ✅ 가격
+                // 가격
                 Text(
                   '${product['product_price']}원',
                   style: const TextStyle(
@@ -131,9 +121,9 @@ class _ProductListSneakersState
                   ),
                 ),
 
-                // ✅ 컬러명
+                // 컬러 ID (임시)
                 Text(
-                  product['color_name'],
+                  '컬러 ID: ${product['category_color_id']}',
                   style: const TextStyle(fontSize: 12),
                 ),
               ],

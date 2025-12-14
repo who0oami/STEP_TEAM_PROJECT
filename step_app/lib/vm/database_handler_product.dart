@@ -43,7 +43,23 @@ class DatabaseHandlerProduct {
     return result.map((e) => Product.fromMap(e)).toList();
   }
 
-  //query(이름, 카테고리 조회)
+  //query(브랜드 이름으로 조회)
+
+  Future<List<Map<String, dynamic>>>
+  queryProductsByManufacturer(int manufacturerId) async {
+    final db = await AppDatabase.instance.db;
+
+    final result = await db.rawQuery(
+      '''
+    SELECT *
+    FROM product
+    WHERE category_manufacturer_id = ?
+    ''',
+      [manufacturerId],
+    );
+
+    return result;
+  }
 
   // =====================
   // QUERY (ID로 조회)

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:step_app/view/app/login_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_first_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_second_page.dart';
-import 'package:step_app/view/app/product_page/home_tab_third_page.dart';
 import 'package:step_app/vm/seeds/seed_branch.dart';
 import 'package:step_app/vm/seeds/seed_category_color.dart';
 import 'package:step_app/vm/seeds/seed_category_manufacturer.dart';
@@ -90,20 +89,9 @@ class _HomeState extends State<Home>
                     ),
                   ),
 
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
 
-                  // 첫 번째 아이콘
-                  // IconButton(
-                  //   onPressed: () {
-                  //     // Get.to(loginPage());
-                  //   },
-                  //   icon: Icon(
-                  //     Icons.shopping_bag_outlined,
-                  //     size: 28,
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 4),
-                  // 두 번째 아이콘 (로그인)
+                  // 아이콘 (로그인)
                   IconButton(
                     onPressed: () {
                       Get.to(LoginPage());
@@ -145,7 +133,7 @@ class _HomeState extends State<Home>
                 children: [
                   HomeTabFirstPage(),
                   HomeTabSecondPage(),
-                  HomeTabThirdPage(), // PrdTabThirdPage(),
+                  // PrdTabThirdPage(),
                 ],
               ),
             ),
