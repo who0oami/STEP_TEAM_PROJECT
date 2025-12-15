@@ -39,14 +39,11 @@ class HomeTabSecondPage extends StatefulWidget {
   const HomeTabSecondPage({super.key});
 
   @override
-  State<HomeTabSecondPage> createState() =>
-      _HomeTabSecondPageState();
+  State<HomeTabSecondPage> createState() => _HomeTabSecondPageState();
 }
 
-class _HomeTabSecondPageState
-    extends State<HomeTabSecondPage> {
-  final DatabaseHandlerProduct handler =
-      DatabaseHandlerProduct();
+class _HomeTabSecondPageState extends State<HomeTabSecondPage> {
+  final DatabaseHandlerProduct handler = DatabaseHandlerProduct();
 
   List<Map<String, dynamic>> products = [];
   bool isLoading = true;
@@ -58,8 +55,7 @@ class _HomeTabSecondPageState
   }
 
   Future<void> loadProducts() async {
-    final result = await handler
-        .queryProductsSizeOver255();
+    final result = await handler.queryProductsSizeOver255();
     setState(() {
       products = result;
       isLoading = false;
@@ -69,34 +65,29 @@ class _HomeTabSecondPageState
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (products.isEmpty) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            '사이즈 255 이상 상품이 없습니다',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: Text('남성 상품이 없습니다', style: TextStyle(color: Colors.grey)),
         ),
       );
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: GridView.builder(
           itemCount: products.length,
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
-              ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+          ),
           itemBuilder: (context, index) {
             final product = products[index];
 
@@ -105,20 +96,17 @@ class _HomeTabSecondPageState
                 //
               },
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(10),
-                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
                       child: Center(
                         child: Image.asset(
-                          newImages[index %
-                              newImages.length],
+                          newImages[index % newImages.length],
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -126,24 +114,16 @@ class _HomeTabSecondPageState
                   ),
                   SizedBox(height: 6),
                   Text(
-                    manufacturerName(
-                      product['category_manufacturer_id'],
-                    ),
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    manufacturerName(product['category_manufacturer_id']),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     '사이즈 ${product['category_size_id']}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 13),
                   ),
                   Text(
                     '${product['product_price']}원',
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ],
               ),

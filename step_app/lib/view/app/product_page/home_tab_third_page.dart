@@ -38,14 +38,11 @@ class HomeTabThirdPage extends StatefulWidget {
   const HomeTabThirdPage({super.key});
 
   @override
-  State<HomeTabThirdPage> createState() =>
-      _HomeTabThirdPageState();
+  State<HomeTabThirdPage> createState() => _HomeTabThirdPageState();
 }
 
-class _HomeTabThirdPageState
-    extends State<HomeTabThirdPage> {
-  final DatabaseHandlerProduct handler =
-      DatabaseHandlerProduct();
+class _HomeTabThirdPageState extends State<HomeTabThirdPage> {
+  final DatabaseHandlerProduct handler = DatabaseHandlerProduct();
 
   List<Map<String, dynamic>> products = [];
   bool isLoading = true;
@@ -57,8 +54,7 @@ class _HomeTabThirdPageState
   }
 
   Future<void> loadProducts() async {
-    final result = await handler
-        .queryProductsSizeUnder250();
+    final result = await handler.queryProductsSizeUnder250();
 
     setState(() {
       products = result;
@@ -74,53 +70,44 @@ class _HomeTabThirdPageState
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (products.isEmpty) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            '여성 상품이 없습니다',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: Text('여성 상품이 없습니다', style: TextStyle(color: Colors.grey)),
         ),
       );
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: GridView.builder(
           itemCount: products.length,
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
-              ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+          ),
           itemBuilder: (context, index) {
             final product = products[index];
 
             return Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 255, 255, 255),
                     ),
                     child: Center(
                       child: Image.asset(
-                        newImages[index +
-                            2 % newImages.length],
+                        newImages[index % newImages.length],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -129,13 +116,8 @@ class _HomeTabThirdPageState
                 SizedBox(height: 6),
 
                 Text(
-                  manufacturerName(
-                    product['category_manufacturer_id'],
-                  ),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  manufacturerName(product['category_manufacturer_id']),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
 
                 Text(

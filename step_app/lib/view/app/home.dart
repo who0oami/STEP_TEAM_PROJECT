@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_app/model/product.dart';
 import 'package:step_app/view/app/login_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_first_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_second_page.dart';
 import 'package:step_app/view/app/product_page/home_tab_third_page.dart';
+import 'package:step_app/vm/database_handler_product.dart';
 import 'package:step_app/vm/seeds/seed_branch.dart';
 import 'package:step_app/vm/seeds/seed_category_color.dart';
 import 'package:step_app/vm/seeds/seed_category_manufacturer.dart';
@@ -19,17 +21,22 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home>
-    with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // property
   late TabController tabController;
   late TextEditingController searchController;
+  late List<Product> allProducts; // 전체 데이터
+  late List<Product> filteredProducts; // 검색 결과
 
   @override
   void initState() {
     // 탭 컨트롤러 초기화 (탭 3개)
     tabController = TabController(length: 3, vsync: this);
     searchController = TextEditingController();
+
+    allProducts = []; // DB or seed에서 불러온 전체 목록
+    filteredProducts = [];
+
     super.initState();
   }
 
@@ -52,11 +59,12 @@ class _HomeState extends State<Home>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                 left: 16.0,
                 right: 16.0,
                 top: 8.0,
@@ -67,6 +75,7 @@ class _HomeState extends State<Home>
                   Expanded(
                     child: TextField(
                       controller: searchController,
+                      onChanged: filterProducts,
                       decoration: InputDecoration(
                         labelText: 'Search',
                         prefixIcon: Icon(Icons.search),
@@ -74,15 +83,15 @@ class _HomeState extends State<Home>
                           icon: Icon(Icons.clear),
                           onPressed: () {
                             searchController.clear();
+                            filterProducts('');
                           },
                         ),
 
                         border: UnderlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 10,
-                            ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 10,
+                        ),
                       ),
                       onSubmitted: (value) {
                         //
@@ -106,7 +115,7 @@ class _HomeState extends State<Home>
             //  TabBar
             Container(
               height: 50,
-              color: Color.fromARGB(255, 255, 227, 145),
+              color: Color.fromARGB(255, 255, 255, 255),
               child: TabBar(
                 controller: tabController,
                 labelColor: Colors.black,
@@ -137,5 +146,21 @@ class _HomeState extends State<Home>
         ),
       ),
     );
+  } // build
+
+  void filterProducts(String keyword) {
+    if (keyword.isEmpty) {
+      setState(() {
+        filteredProducts = allProducts;
+      });
+      return;
+    }
+
+    // setState(() {
+    //   filteredProducts = allProducts.where((product) {
+    //     return product.name.contains(keyword) ||
+    //         product.manufacturer.contains(keyword);
+    //   }).toList();
+    // });
   }
-}
+} // class
