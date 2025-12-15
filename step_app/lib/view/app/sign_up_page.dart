@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/get_utils/get_utils.dart';
+import 'package:get/get.dart';
 import 'package:step_app/model/customer.dart';
 import 'package:step_app/util/message.dart';
 import 'package:step_app/util/scolor.dart';
@@ -10,6 +10,31 @@ class SignUpPage extends StatefulWidget {
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class PColor {
+  static const Color appBarBackgroundColor = Colors.black;
+  static const Color appBarForegroundColor = Colors.white;
+  static const Color buttonPrimary = Colors.blue;
+  static const Color buttonTextColor = Colors.white;
+}
+
+class Message {
+  void snackBar(String title, String message) {
+    Get.snackbar(title, message);
+  }
+
+  void showDialog(
+    String title,
+    String message, {
+    VoidCallback? onConfirm,
+  }) {
+    Get.defaultDialog(
+      title: title,
+      middleText: message,
+      onConfirm: onConfirm,
+    );
+  }
 }
 
 class _SignUpPageState extends State<SignUpPage> {
@@ -24,19 +49,28 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController pwcheckcontroller;
   late TextEditingController namecontroller;
   late TextEditingController phonecontroller;
+
   late DatabaseHandlerCustomer customerHandler;
+
+  bool isButtonEnabled = false;
 
   final Message msg = Message();
 
   @override
   void initState() {
     super.initState();
-    emailcontroller = TextEditingController();
-    pwcontroller = TextEditingController();
-    pwcheckcontroller = TextEditingController();
-    namecontroller = TextEditingController();
-    phonecontroller = TextEditingController();
     customerHandler = DatabaseHandlerCustomer();
+
+    emailcontroller = TextEditingController()
+      ..addListener(_updateButtonState);
+    pwcontroller = TextEditingController()
+      ..addListener(_updateButtonState);
+    pwcheckcontroller = TextEditingController()
+      ..addListener(_updateButtonState);
+    namecontroller = TextEditingController()
+      ..addListener(_updateButtonState);
+    phonecontroller = TextEditingController()
+      ..addListener(_updateButtonState);
   }
 
   @override
@@ -51,6 +85,22 @@ class _SignUpPageState extends State<SignUpPage> {
 
   _updateAllCheck() {
     all = fourteen && use && collect && marketing;
+    _updateButtonState();
+  }
+
+  _updateButtonState() {
+    bool fieldsFilled =
+        emailcontroller.text.trim().isNotEmpty &&
+        pwcontroller.text.trim().isNotEmpty &&
+        pwcheckcontroller.text.trim().isNotEmpty &&
+        namecontroller.text.trim().isNotEmpty &&
+        phonecontroller.text.trim().isNotEmpty;
+    bool requiredAgreementsChecked =
+        fourteen && use && collect;
+
+    isButtonEnabled =
+        fieldsFilled && requiredAgreementsChecked;
+    setState(() {});
   }
 
   @override
@@ -61,6 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
         title: Text('회원가입'),
         backgroundColor: PColor.appBarBackgroundColor,
         foregroundColor: PColor.appBarForegroundColor,
+        elevation: 0,
       ),
 
       body: SingleChildScrollView(
@@ -70,117 +121,236 @@ class _SignUpPageState extends State<SignUpPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
-              Text('이메일 주소'),
-              TextField(controller: emailcontroller),
-              Text('비밀번호'),
-              TextField(
-                controller: pwcontroller,
-                obscureText: true,
+              SizedBox(height: 10),
+
+              _buildInputField(
+                '이메일 주소',
+                emailcontroller,
+                TextInputType.emailAddress,
               ),
-              Text('비밀번호 확인'),
-              TextField(
-                controller: pwcheckcontroller,
-                obscureText: true,
+              _buildInputField(
+                '비밀번호',
+                pwcontroller,
+                TextInputType.text,
+                isObscure: true,
               ),
-              Text('이름'),
-              TextField(controller: namecontroller),
-              Text('전화번호'),
-              TextField(
-                controller: phonecontroller,
-                keyboardType: TextInputType.phone,
+              _buildInputField(
+                '비밀번호 확인',
+                pwcheckcontroller,
+                TextInputType.text,
+                isObscure: true,
               ),
-              SizedBox(height: 50),
-              //Checkbox(value: value, onChanged: onChanged)
-              Row(
-                children: [
-                  Checkbox(
-                    value: all,
-                    onChanged: _toggleAll,
-                  ),
-                  Text('모두 동의합니다'),
-                ],
+              _buildInputField(
+                '이름',
+                namecontroller,
+                TextInputType.text,
               ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: fourteen,
-                    onChanged: (value) {
-                      fourteen = value!;
-                      _updateAllCheck();
-                      setState(() {});
-                    },
-                  ),
-                  Text('[필수]만 14세 이상입니다'),
-                ],
+              _buildInputField(
+                '전화번호',
+                phonecontroller,
+                TextInputType.phone,
               ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: use,
-                    onChanged: (value) {
-                      use = value!;
-                      _updateAllCheck();
-                      setState(() {});
-                    },
-                  ),
-                  Text('[필수]이용 약관 동의'),
-                ],
+
+              SizedBox(height: 30),
+              Divider(
+                color: Colors.grey.shade300,
+                thickness: 1,
               ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: collect,
-                    onChanged: (value) {
-                      collect = value!;
-                      _updateAllCheck();
-                      setState(() {});
-                    },
-                  ),
-                  Text('[필수]개인정보 수집 및 이용 동의'),
-                ],
+              SizedBox(height: 10),
+              Text(
+                '약관 동의',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: PColor.appBarForegroundColor,
+                ),
               ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: marketing,
-                    onChanged: (value) {
-                      marketing = value!;
-                      _updateAllCheck();
-                      setState(() {});
-                    },
-                  ),
-                  Text('[동의]마케팅 수신 동의'),
-                ],
+              SizedBox(height: 10),
+
+              _buildAgreementRow(
+                text: '모두 동의합니다',
+                value: all,
+                onChanged: _toggleAll,
+                isAll: true,
               ),
+              Divider(color: Colors.grey.shade200),
+
+              _buildAgreementRow(
+                text: '[필수] 만 14세 이상입니다',
+                value: fourteen,
+                onChanged: (value) {
+                  setState(() {
+                    fourteen = value!;
+                    _updateAllCheck();
+                  });
+                },
+              ),
+
+              _buildAgreementRow(
+                text: '[필수] 이용 약관 동의',
+                value: use,
+                onChanged: (value) {
+                  setState(() {
+                    use = value!;
+                    _updateAllCheck();
+                  });
+                },
+              ),
+
+              _buildAgreementRow(
+                text: '[필수] 개인정보 수집 및 이용 동의',
+                value: collect,
+                onChanged: (value) {
+                  setState(() {
+                    collect = value!;
+                    _updateAllCheck();
+                  });
+                },
+              ),
+
+              _buildAgreementRow(
+                text: '[선택] 마케팅 수신 동의',
+                value: marketing,
+                onChanged: (value) {
+                  setState(() {
+                    marketing = value!;
+                    _updateAllCheck();
+                  });
+                },
+              ),
+
+              SizedBox(height: 30),
 
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: PColor.buttonPrimary,
+                    minimumSize: Size(double.infinity, 50),
+                    backgroundColor: isButtonEnabled
+                        ? PColor.buttonPrimary
+                        : PColor.buttonPrimary.withOpacity(
+                            0.5,
+                          ),
                     foregroundColor: PColor.buttonTextColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        8,
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    _signUp();
-                  },
-                  child: Text('가입하기'),
+                  onPressed: isButtonEnabled
+                      ? _signUp
+                      : null,
+                  child: Text(
+                    '가입하기',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
-  } //function
+  }
+
+  Widget _buildInputField(
+    String label,
+    TextEditingController controller,
+    TextInputType keyboardType, {
+    bool isObscure = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          SizedBox(height: 5),
+          TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            obscureText: isObscure,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 12,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: PColor.buttonPrimary,
+                  width: 2,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAgreementRow({
+    required String text,
+    required bool value,
+    required ValueChanged<bool?> onChanged,
+    bool isAll = false,
+  }) {
+    return Row(
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+          activeColor: PColor.buttonPrimary,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: isAll ? 16 : 14,
+            fontWeight: isAll
+                ? FontWeight.bold
+                : FontWeight.normal,
+            color: isAll
+                ? PColor.appBarForegroundColor
+                : Colors.grey.shade800,
+          ),
+        ),
+      ],
+    );
+  }
 
   _toggleAll(bool? value) {
     if (value != null) {
-      all = value;
-      fourteen = value;
-      use = value;
-      collect = value;
-      marketing = value;
-      setState(() {});
+      setState(() {
+        all = value;
+        fourteen = value;
+        use = value;
+        collect = value;
+        marketing = value;
+        _updateButtonState();
+      });
     }
   }
 
@@ -199,17 +369,17 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    if (pwcontroller.text.trim() !=
-        pwcheckcontroller.text.trim()) {
-      msg.snackBar('비밀번호 오류', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-      return;
-    }
-
     final exists = await customerHandler.checkEmailExists(
       emailcontroller.text.trim(),
     );
     if (exists) {
       msg.showDialog('가입 실패', '이미 존재하는 이메일 주소입니다.');
+      return;
+    }
+
+    if (pwcontroller.text.trim() !=
+        pwcheckcontroller.text.trim()) {
+      msg.snackBar('비밀번호 오류', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       return;
     }
 
@@ -231,13 +401,20 @@ class _SignUpPageState extends State<SignUpPage> {
       customer_lat: null,
       customer_lng: null,
     );
+
     final result = await customerHandler.insertCustomer(
       customer,
     );
+
     if (result > 0) {
       msg.showDialog(
         '회원가입 완료',
-        '${namecontroller.text}님, 회원가입을 축하드립니다!',
+        '${namecontroller.text}님, 회원가입을 축하드립니다! 로그인 페이지로 이동합니다.',
+        onConfirm: () {
+          Get.back();
+
+          Get.back();
+        },
       );
     } else {
       msg.showDialog(
