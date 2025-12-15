@@ -29,7 +29,6 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
   late TextEditingController branchName; // 대리점명
   late List<Branch> branchList = []; // 매장 정보
   Branch? selectedBranch; // 선택한 대리점
-  final BranchHandler handler = BranchHandler(); // DB 핸들러
 
   // 지도
   late MapController mapController; // 지도 컨트롤러
@@ -37,18 +36,19 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
   double? longData; // 경도
   bool canShowMap = false; // 지도 표시 여부
 
+  final BranchHandler handler = BranchHandler(); // DB 핸들러
+
   @override
   void initState() {
     super.initState();
     mapController = MapController();
+    branchName = TextEditingController();
 
     // 결제 페이지에서 전달된 매장명 있으면 TextField에 채움
     final args = Get.arguments;
-    branchName = TextEditingController(
-      text: args != null && args['branchName'] != null
-          ? args['branchName']
-          : '',
-    );
+    if (args != null && args['branchName'] != null) {
+      branchName.text = args['branchName'];
+    }
   }
 
   @override
@@ -96,11 +96,7 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
     if (!canShowMap || latData == null || longData == null) {
       return const Center(
         child: Text(
-          '지도 영역',
-          style: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-          ),
+          '',
         ),
       );
     }
@@ -158,11 +154,24 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      suffixIcon: IconButton(
-                        onPressed: searchBranches,
-                        icon: const Icon(Icons.search),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: searchBranches,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PColor.appBarForegroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
+                    child: const Icon(
+                      Icons.search,
+                      color: Colors.white
+                      ),
                   ),
                 ),
               ],
@@ -193,6 +202,7 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
                       },
                     ),
             ),
+            // 지도 영역
             Container(
               width: double.infinity,
               height: 200,
@@ -205,6 +215,7 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
           ],
         ),
       ),
+      // 확정 버튼
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: SizedBox(
@@ -213,6 +224,7 @@ class _StoreFinderPageState extends State<StoreFinderPage> {
             onPressed: selectedBranch == null
                 ? null
                 : () {
+                    // 선택한 매장 정보 전달
                     Get.back(
                       result: {
                         'branchName': selectedBranch!.branch_name,
