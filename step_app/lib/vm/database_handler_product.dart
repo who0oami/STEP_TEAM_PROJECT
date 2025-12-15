@@ -37,16 +37,18 @@ class DatabaseHandlerProduct {
   // =====================
   Future<List<Product>> queryProduct() async {
     final Database db = await AppDatabase.instance.db;
-    final List<Map<String, Object?>> result = await db
-        .rawQuery('select * from product');
+    final List<Map<String, Object?>> result = await db.rawQuery(
+      'select * from product',
+    );
 
     return result.map((e) => Product.fromMap(e)).toList();
   }
 
   //query(브랜드 이름으로 조회)
 
-  Future<List<Map<String, dynamic>>>
-  queryProductsByManufacturer(int manufacturerId) async {
+  Future<List<Map<String, dynamic>>> queryProductsByManufacturer(
+    int manufacturerId,
+  ) async {
     final db = await AppDatabase.instance.db;
 
     final result = await db.rawQuery(
@@ -60,6 +62,41 @@ class DatabaseHandlerProduct {
 
     return result;
   }
+
+  // query(사이즈로 조회) 혜전 추가
+  // DatabaseHandlerProduct.dart
+
+  Future<List<Map<String, dynamic>>> queryProductsSizeUnder250() async {
+    final db = await AppDatabase.instance.db;
+
+    return await db.rawQuery(
+      '''
+    SELECT *
+    FROM product
+    WHERE category_size_id <= ?
+    ''',
+      [250],
+    );
+  }
+  // 여성용
+
+  Future<List<Map<String, dynamic>>> queryProductsSizeOver255() async {
+    final db = await AppDatabase.instance.db;
+
+    final result = await db.rawQuery(
+      '''
+    SELECT *
+    FROM product
+    WHERE category_size_id >= ?
+    ORDER BY category_size_id ASC
+    ''',
+      [255],
+    );
+
+    return result;
+  }
+
+  // 남성용 (혜전 end)
 
   // =====================
   // QUERY (ID로 조회)
@@ -84,9 +121,7 @@ class DatabaseHandlerProduct {
     final Database db = await AppDatabase.instance.db;
 
     if (product.product_id == null) {
-      throw Exception(
-        'product_id가 없는 데이터는 update 할 수 없습니다.',
-      );
+      throw Exception('product_id가 없는 데이터는 update 할 수 없습니다.');
     }
 
     return await db.rawUpdate(
@@ -118,9 +153,8 @@ class DatabaseHandlerProduct {
   // =====================
   Future<int> deleteProduct(int product_id) async {
     final Database db = await AppDatabase.instance.db;
-    return await db.rawDelete(
-      'delete from product where product_id = ?',
-      [product_id],
-    );
+    return await db.rawDelete('delete from product where product_id = ?', [
+      product_id,
+    ]);
   }
 }
