@@ -23,10 +23,10 @@ payment_detail_page -> 결제내역상세 _진수님
 
 ==========================================
 웹
-employee_login_  -> 직원로그인
-employee_sing_up -> 직원회원가입
-inventory_inbound -> 입고
-purchase_order -> 발주
-sales -> 매출현황
-sign -> 결재
-stock -> 재고 현황
+employee_login_  -> 직원로그인_혜전님
+employee_sing_up -> 직원회원가입_혜전님
+inventory_inbound -> 입고_ 지현
+purchase_order -> 발주_ 지현
+sales -> 매출현황_ 지현
+sign -> 결재_ 지현
+stock -> 재고 현황_ 지현
