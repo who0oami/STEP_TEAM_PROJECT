@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:step_app/view/app/sign_up_page.dart';
 import 'package:step_app/view/web/purchase_order.dart';
 import 'package:step_app/view/web/sales.dart';
+import 'package:step_app/view/web/sign.dart';
 import 'package:step_app/view/web/stock.dart';
 
 /* 
@@ -66,9 +67,15 @@ class _EmployeeTabbarState extends State<EmployeeTabbar> with SingleTickerProvid
                   },
                  ),
                  ListTile(
-                  title: const Text('결재'),
+                  title: const Text('재고'),
                   onTap: () {
                     controller.index = 3; 
+                  },
+                 ),
+                 ListTile(
+                  title: const Text('결재'),
+                  onTap: () {
+                    controller.index = 4; 
                   },
                  ),
               ],
@@ -81,7 +88,7 @@ class _EmployeeTabbarState extends State<EmployeeTabbar> with SingleTickerProvid
                 PurchaseOrder(), // 발주
                 Sales(), // 매출
                 Stock(), // 재고
-                SignUpPage(), // 결재
+                Sign(orderData: [],), // 결재
               ],
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_app/util/scolor.dart';
+import 'package:step_app/view/app/profile_view_page.dart';
 import 'package:step_app/view/app/store_finder_page.dart';
 /* 
 Description : 사용자 결제 화면
@@ -69,7 +70,12 @@ class _PurchasePageState extends State<PurchasePage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('지점'),
+                          Text(
+                            '지점',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold
+                            ),
+                            ),
                           Text(
                           branchName.text.isEmpty ? '미지정' : branchName.text,
                           style: TextStyle(
@@ -105,13 +111,23 @@ class _PurchasePageState extends State<PurchasePage> {
                                 horizontal: 12,
                               ),
                               suffixIcon: IconButton(
-                                onPressed: () => Get.to(StoreFinderPage()),
-                                 icon: Icon(
+                                onPressed: () async {
+                                  final result = await Get.to(() => StoreFinderPage(), arguments: {
+                                    'branchName': branchName.text,
+                                  });
+                                  if (result != null && result['branchName'] != null) {
+                                    setState(() {
+                                      branchName.text = result['branchName'];
+                                      isBranchSelected = true; // 버튼 활성화
+                                    });
+                                  }
+                                },
+                                icon: Icon(
                                   Icons.search,
                                   color: PColor.appBarBackgroundColor,
                                   size: 20,
-                                  )
                                 ),
+                              ),
                             ),
                           ),
                         ),
@@ -161,11 +177,19 @@ class _PurchasePageState extends State<PurchasePage> {
                               style: TextStyle(
                               fontWeight: FontWeight.bold),),
                               Text(
-                                "/",
+                                " / ",
                               style: TextStyle(
                               fontWeight: FontWeight.bold),),
                               Text(
                                 "191,000 원",
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                              Text(
+                                " / ",
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold),),
+                              Text(
+                                "1 개",
                               style: TextStyle(
                               fontWeight: FontWeight.bold),),
                             ],
@@ -207,15 +231,23 @@ class _PurchasePageState extends State<PurchasePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "280 SIZE",
+                                  "265 SIZE",
                                 style: TextStyle(
                                 fontWeight: FontWeight.bold),),
                                 Text(
-                                  "/",
+                                  " / ",
                                 style: TextStyle(
                                 fontWeight: FontWeight.bold),),
                                 Text(
                                   "191,000 원",
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold),),
+                                Text(
+                                  " / ",
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold),),
+                                Text(
+                                  "1 개",
                                 style: TextStyle(
                                 fontWeight: FontWeight.bold),),
                               ],
@@ -251,7 +283,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('구매가 합계'),
-                              Text("182,000 원"), 
+                              Text("382,000 원"), 
                             ],
                           ),
                           SizedBox(height: 8),
@@ -267,7 +299,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('총 결제금액'),
-                              Text('191,000 원'), 
+                              Text('388,000 원'), 
                             ],
                           ),
                         ],
@@ -283,7 +315,7 @@ class _PurchasePageState extends State<PurchasePage> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                        Text(
-                        '221,000원',
+                        '388,000원',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                         ],
@@ -303,11 +335,11 @@ class _PurchasePageState extends State<PurchasePage> {
           child: ElevatedButton(
             onPressed: isBranchSelected
                 ? () {
-                    // 결제 완료 페이지로 이동
+                    buttonDialog();
                   }
                 : null, // null이면 버튼 비활성화
         style: ElevatedButton.styleFrom(
-        backgroundColor: isBranchSelected ? Colors.blue : Colors.grey,
+        backgroundColor: isBranchSelected ? Colors.red : Colors.grey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -323,7 +355,43 @@ class _PurchasePageState extends State<PurchasePage> {
       ),
     ),
   ),
-
     );
+  } // build
+  // ----Functions ----
+  buttonDialog(){
+    Get.defaultDialog(
+      title: '결제 확인',
+      middleText: '결제 하시겠습니까?',
+      backgroundColor: PColor.appBarBackgroundColor,
+      barrierDismissible: false,
+      actions: [
+        ElevatedButton(
+          onPressed: () => Get.offAll(ProfileViewPage()),
+          style: ElevatedButton.styleFrom(
+                backgroundColor: PColor.buttonPoint,
+                foregroundColor: PColor.buttonTextColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+          ),
+          child: Text('결제하기')
+        ),
+        ElevatedButton(
+          onPressed: () => Get.back(),
+          style: ElevatedButton.styleFrom(
+                backgroundColor: PColor.buttonPoint,
+                foregroundColor: PColor.buttonGray,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+          ),
+          child: Text('취소')
+        )
+      ]
+    );
+
   }
-}
+
+
+
+} // class
