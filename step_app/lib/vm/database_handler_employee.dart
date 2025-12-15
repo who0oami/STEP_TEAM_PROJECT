@@ -66,12 +66,11 @@ class DatabaseHandlerEmployee {
   // =====================
   Future<List<Employee>> queryEmployee() async {
     final Database db = await AppDatabase.instance.db;
-    final List<Map<String, Object?>> result = await db
-        .rawQuery('select * from employee');
+    final List<Map<String, Object?>> result = await db.rawQuery(
+      'select * from employee',
+    );
 
-    return result
-        .map((e) => Employee.fromMap(e))
-        .toList();
+    return result.map((e) => Employee.fromMap(e)).toList();
   }
 
   // =====================
@@ -108,9 +107,8 @@ class DatabaseHandlerEmployee {
   // =====================
   Future<int> deleteEmployee(int Employee_id) async {
     final Database db = await AppDatabase.instance.db;
-    return await db.rawDelete(
-      'delete from employee where employee_id = ?',
-      [Employee_id],
-    );
+    return await db.rawDelete('delete from employee where employee_id = ?', [
+      Employee_id,
+    ]);
   }
 }
