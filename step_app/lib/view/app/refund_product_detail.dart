@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:step_app/util/message.dart';
 import 'package:step_app/util/scolor.dart';
+import 'package:get/get.dart';
+import 'package:step_app/view/app/home.dart';
 
 enum RefundReason { changeOfMind, productIssue, other }
 
@@ -12,8 +14,7 @@ class RefundProductDetail extends StatefulWidget {
       _RefundProductDetailState();
 }
 
-class _RefundProductDetailState
-    extends State<RefundProductDetail> {
+class _RefundProductDetailState extends State<RefundProductDetail> {
   //property
   RefundReason? _selected = RefundReason.changeOfMind;
   late TextEditingController refundTextController;
@@ -32,10 +33,7 @@ class _RefundProductDetailState
       appBar: AppBar(
         title: const Text(
           '반품 신청',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
         ),
         backgroundColor: PColor.appBarBackgroundColor,
         toolbarHeight: 70,
@@ -65,17 +63,10 @@ class _RefundProductDetailState
                 children: [
                   Image.asset('images/AIR+FORCE+4.png'),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      0,
-                      0,
-                      0,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: Column(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
                           'product name',
@@ -90,17 +81,10 @@ class _RefundProductDetailState
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            0,
-                            10,
-                            0,
-                            0,
-                          ),
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                           child: Text(
                             'product price',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ],
@@ -137,26 +121,19 @@ class _RefundProductDetailState
                     },
                     child: Column(
                       children: [
-                        ...RefundReason.values.map((
-                          reason,
-                        ) {
-                          return RadioListTile<
-                            RefundReason
-                          >(
+                        ...RefundReason.values.map((reason) {
+                          return RadioListTile<RefundReason>(
                             title: Text(
                               _label(reason),
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black
-                                    .withAlpha(180),
-                                fontWeight:
-                                    FontWeight.w500,
+                                color: Colors.black.withAlpha(180),
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             value: reason,
                             dense: true,
-                            contentPadding:
-                                EdgeInsets.zero,
+                            contentPadding: EdgeInsets.zero,
                           );
                         }),
                       ],
@@ -168,9 +145,7 @@ class _RefundProductDetailState
             if (_selected == RefundReason.other)
               Container(
                 margin: const EdgeInsets.only(top: 12),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: PColor.appBarBackgroundColor,
@@ -189,12 +164,7 @@ class _RefundProductDetailState
       ),
 
       bottomNavigationBar: Padding(
-        padding: EdgeInsetsGeometry.fromLTRB(
-          16,
-          0,
-          16,
-          20,
-        ),
+        padding: EdgeInsetsGeometry.fromLTRB(16, 0, 16, 20),
         child: ElevatedButton(
           onPressed: () {
             if (_selected == RefundReason.other &&
@@ -206,21 +176,18 @@ class _RefundProductDetailState
               '완료',
               '반품 신청이 완료되었습니다.',
             ); // 수정 필요 홈으로 가도록
+            // Home으로 이동 (스택 전부 정리하고 홈만 남김)
+            Get.offAll(() => Home());
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: PColor.buttonPrimary,
             foregroundColor: PColor.buttonTextColor,
             minimumSize: const Size(double.infinity, 52),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusGeometry.circular(
-                12,
-              ),
+              borderRadius: BorderRadiusGeometry.circular(12),
             ),
           ),
-          child: Text(
-            '반품 신청',
-            style: TextStyle(fontSize: 16),
-          ),
+          child: Text('반품 신청', style: TextStyle(fontSize: 16)),
         ),
       ),
     );
