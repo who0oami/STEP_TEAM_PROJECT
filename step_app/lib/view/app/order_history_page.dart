@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 
 import 'package:step_app/view/app/payment_detail_page.dart';
 
+import 'package:step_app/model/purchase_list_item.dart';
+import 'package:step_app/view/app/branch_map_page.dart';
+import 'package:step_app/view/app/refund_product_detail.dart';
+
 class OrderHistoryPage extends StatefulWidget {
   OrderHistoryPage({super.key, required this.item});
   final PurchaseListItem item;
@@ -98,7 +102,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _productThumb(i.imageBytes),
+                //  여기 수정: bytes + asset 둘 다 지원
+                _productThumb(
+                  i.imageBytes,
+                  assetPath: i.imageAssetPath,
+                ),
                 SizedBox(width: 12),
                 Expanded(
                   child: _productSummary(i, isPickedUp: isPickedUp),
@@ -120,7 +128,19 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 Expanded(
                   child: _fullOutlineButton(
                     text: '반품하기',
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(
+                        () => RefundProductDetail(
+                          orderNoText: '주문번호 B-AC${i.orderId}',
+                          imageBytes: i.imageBytes,
+                          imageAssetPath: i.imageAssetPath,
+                          productName: i.productName,
+                          brandName: i.brandName,
+                          sizeText: i.sizeText,
+                          isPickedUp: isPickedUp,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -135,6 +155,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     paymentNo: 'O-OC${i.orderId}344533129',
                     orderNo: 'B-AC${i.orderId}344533129',
                     imageBytes: i.imageBytes,
+                    imageAssetPath: i.imageAssetPath, // ✅ 추가
                     productTitle: i.productName,
                     optionLine: i.brandName,
                     sizeLine:
@@ -171,22 +192,30 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     );
   }
 
-  Widget _productThumb(Uint8List bytes) {
+  // ✅ 수정: bytes가 없으면 assetPath로 표시
+  Widget _productThumb(Uint8List bytes, {String? assetPath}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
-      child: bytes.isEmpty
-          ? Container(
+      child: bytes.isNotEmpty
+          ? Image.memory(
+              bytes,
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+            )
+          : (assetPath != null && assetPath.isNotEmpty)
+          ? Image.asset(
+              assetPath,
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+            )
+          : Container(
               width: 70,
               height: 70,
               color: Color(0xFFEDEDED),
               alignment: Alignment.center,
               child: Icon(Icons.image_not_supported, size: 22),
-            )
-          : Image.memory(
-              bytes,
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
             ),
     );
   }
@@ -258,6 +287,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   Widget _pickupInfoCard({required String branchName}) {
+    final i = widget.item;
+
     final pickupAddress = '서울특별시 강남구 강남대로102길\n30 203호';
     final pickupDate = '2025.12.12 이후';
     final pickupTime = '10:00 ~ 21:00';
@@ -294,7 +325,24 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             width: double.infinity,
             height: 40,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                final lat = i.branchLat;
+                final lng = i.branchLng;
+
+                if (lat == null || lng == null) {
+                  Get.snackbar('알림', '지점 좌표가 없습니다.');
+                  return;
+                }
+
+                Get.to(
+                  () => BranchMapPage(
+                    branchName: i.branchName,
+                    address: i.branchLocation,
+                    lat: lat,
+                    lng: lng,
+                  ),
+                );
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Color(0xFFE1E1E1)),
                 shape: RoundedRectangleBorder(
@@ -396,25 +444,4 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       ),
     );
   }
-}
-
-class PurchaseListItem {
-  final int orderId;
-  final Uint8List imageBytes;
-  final String productName;
-  final String brandName;
-  final String branchName;
-  final String sizeText;
-
-  int pickupStatus; // 0=대기, 1=완료
-
-  PurchaseListItem({
-    required this.orderId,
-    required this.imageBytes,
-    required this.productName,
-    required this.brandName,
-    required this.branchName,
-    required this.sizeText,
-    this.pickupStatus = 0,
-  });
 }
