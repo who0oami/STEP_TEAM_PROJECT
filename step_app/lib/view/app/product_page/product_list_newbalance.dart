@@ -25,15 +25,12 @@ class ProductListNewbalance extends StatefulWidget {
   const ProductListNewbalance({super.key});
 
   @override
-  State<ProductListNewbalance> createState() =>
-      _ProductListNewbalanceState();
+  State<ProductListNewbalance> createState() => _ProductListNewbalanceState();
 }
 
-class _ProductListNewbalanceState
-    extends State<ProductListNewbalance> {
+class _ProductListNewbalanceState extends State<ProductListNewbalance> {
   //property
-  final DatabaseHandlerProduct handler =
-      DatabaseHandlerProduct();
+  final DatabaseHandlerProduct handler = DatabaseHandlerProduct();
 
   List<Map<String, dynamic>> products = [];
   bool isLoading = true;
@@ -54,8 +51,9 @@ class _ProductListNewbalanceState
   }
 
   Future<void> loadProducts() async {
-    final result = await handler
-        .queryProductsByManufacturer(2); //2 = new balance
+    final result = await handler.queryProductsByManufacturer(
+      2,
+    ); //2 = new balance
 
     setState(() {
       products = result;
@@ -66,9 +64,7 @@ class _ProductListNewbalanceState
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (products.isEmpty) {
@@ -83,40 +79,37 @@ class _ProductListNewbalanceState
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('NEW BALANCE'),
+        title: Text('NEW BALANCE', style: TextStyle(fontSize: 28)),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: EdgeInsets.all(12),
         child: GridView.builder(
           itemCount: products.length,
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
-              ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+          ),
           itemBuilder: (context, index) {
             final product = products[index];
 
             return Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromARGB(255, 255, 255, 255),
                     ),
                     child: Center(
                       child: Image.asset(
-                        newImages[index %
-                            newImages.length],
+                        newImages[index % newImages.length],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -127,29 +120,18 @@ class _ProductListNewbalanceState
 
                 Text(
                   'New Balance',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
 
-                // Text(
-                //   '사이즈 ${product['product_size_id']}',
-                //   style: TextStyle(fontSize: 13),
-                // ),
+                Text(
+                  '사이즈 ${product['category_size_id']}',
+                  style: TextStyle(fontSize: 13),
+                ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    0,
-                    0,
-                    0,
-                    20,
-                  ),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                   child: Text(
                     '가격 : ${product['product_price']}원',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                   ),
                 ),
 

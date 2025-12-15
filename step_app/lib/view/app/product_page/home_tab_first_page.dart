@@ -9,24 +9,23 @@ class HomeTabFirstPage extends StatefulWidget {
   const HomeTabFirstPage({super.key});
 
   @override
-  State<HomeTabFirstPage> createState() =>
-      _HomeTabFirstPageState();
+  State<HomeTabFirstPage> createState() => _HomeTabFirstPageState();
 }
 
-class _HomeTabFirstPageState
-    extends State<HomeTabFirstPage> {
+class _HomeTabFirstPageState extends State<HomeTabFirstPage> {
   // property
   int _currentIndex = 0;
   final List<String> bannerImages = [
+    'images/AIR+FORCE+8.png',
     'images/AIR+FORCE+3.png',
     'images/AIR+FORCE+7.png',
-    'images/model.png',
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(
           children: [
             // 이미지 캐러셀(s)
@@ -48,17 +47,10 @@ class _HomeTabFirstPageState
                   ),
                   items: bannerImages.map((imagePath) {
                     return Container(
-                      width:
-                          MediaQuery.of(
-                            context,
-                          ).size.width -
-                          32,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                      ),
+                      width: MediaQuery.of(context).size.width - 32,
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
                           image: AssetImage(imagePath),
                           fit: BoxFit.cover,
@@ -72,34 +64,21 @@ class _HomeTabFirstPageState
                 Positioned(
                   bottom: 12,
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: List.generate(
-                      bannerImages.length,
-                      (index) {
-                        return AnimatedContainer(
-                          duration: const Duration(
-                            milliseconds: 300,
-                          ),
-                          margin:
-                              const EdgeInsets.symmetric(
-                                horizontal: 3,
-                              ),
-                          width: _currentIndex == index
-                              ? 10
-                              : 8,
-                          height: _currentIndex == index
-                              ? 10
-                              : 8,
-                          decoration: BoxDecoration(
-                            color: _currentIndex == index
-                                ? Colors.black
-                                : PColor.buttonGray,
-                            shape: BoxShape.circle,
-                          ),
-                        );
-                      },
-                    ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(bannerImages.length, (index) {
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        width: _currentIndex == index ? 10 : 8,
+                        height: _currentIndex == index ? 10 : 8,
+                        decoration: BoxDecoration(
+                          color: _currentIndex == index
+                              ? const Color.fromARGB(200, 0, 0, 0)
+                              : const Color.fromARGB(111, 158, 158, 158),
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ],
@@ -110,8 +89,7 @@ class _HomeTabFirstPageState
             SizedBox(
               height: 150,
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
                     children: [
@@ -123,21 +101,19 @@ class _HomeTabFirstPageState
                         child: Container(
                           width: 100,
                           height: 100,
-                          padding: EdgeInsets.all(
-                            3,
-                          ), // 테두리 두께
+                          padding: EdgeInsets.all(2), // 테두리 두께
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: PColor.buttonGray,
+                              color: Color.fromARGB(115, 0, 0, 0),
                               width: 3,
                             ),
                           ),
 
                           child: ClipOval(
                             child: Image.asset(
-                              'images/AIR+FORCE+4.png',
-                              fit: BoxFit.cover,
+                              'images/logo_nike.png',
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),
@@ -146,10 +122,7 @@ class _HomeTabFirstPageState
                         onPressed: () {
                           Get.to(ProductListNike());
                         },
-                        child: Text(
-                          'NIKE',
-                          style: TextStyle(fontSize: 18),
-                        ),
+                        child: Text('NIKE', style: TextStyle(fontSize: 18)),
                       ),
                     ],
                   ),
@@ -163,20 +136,18 @@ class _HomeTabFirstPageState
                         child: Container(
                           width: 100,
                           height: 100,
-                          padding: EdgeInsets.all(
-                            3,
-                          ), // 테두리 두께
+                          padding: EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: PColor.buttonGray,
+                              color: Color.fromARGB(115, 0, 0, 0),
                               width: 3,
                             ),
                           ),
                           child: ClipOval(
                             child: Image.asset(
-                              'images/AIR+FORCE+1.png',
-                              fit: BoxFit.cover,
+                              'images/logo_new.png',
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),

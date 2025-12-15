@@ -21,14 +21,11 @@ class ProductListNike extends StatefulWidget {
   const ProductListNike({super.key});
 
   @override
-  State<ProductListNike> createState() =>
-      _ProductListNikeState();
+  State<ProductListNike> createState() => _ProductListNikeState();
 }
 
-class _ProductListNikeState
-    extends State<ProductListNike> {
-  final DatabaseHandlerProduct handler =
-      DatabaseHandlerProduct();
+class _ProductListNikeState extends State<ProductListNike> {
+  final DatabaseHandlerProduct handler = DatabaseHandlerProduct();
 
   List<Map<String, dynamic>> products = [];
   bool isLoading = true;
@@ -49,8 +46,7 @@ class _ProductListNikeState
   }
 
   Future<void> loadProducts() async {
-    final result = await handler
-        .queryProductsByManufacturer(1); // 1 = NIKE
+    final result = await handler.queryProductsByManufacturer(1); // 1 = NIKE
 
     setState(() {
       products = result;
@@ -61,9 +57,7 @@ class _ProductListNikeState
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (products.isEmpty) {
@@ -80,20 +74,20 @@ class _ProductListNikeState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('NIKE'),
+        title: Text('NIKE', style: TextStyle(fontSize: 32)),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: EdgeInsets.all(12),
         child: GridView.builder(
           itemCount: products.length,
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
-              ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+          ),
           itemBuilder: (context, index) {
             final product = products[index];
 
@@ -102,26 +96,22 @@ class _ProductListNikeState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (__) =>
-                        DetailPage(), //product: product
+                    builder: (__) => DetailPage(), //product: product
                   ),
                 );
               },
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
                       ),
                       child: Center(
                         child: Image.asset(
-                          nikeImages[index %
-                              nikeImages.length],
+                          nikeImages[index % nikeImages.length],
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -132,24 +122,16 @@ class _ProductListNikeState
 
                   Text(
                     'NIKE',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
 
                   Text(
-                    '사이즈 ${product['product_size_id']}',
+                    '사이즈 ${product['category_size_id']}',
                     style: TextStyle(fontSize: 13),
                   ),
 
                   Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      0,
-                      0,
-                      0,
-                      20,
-                    ),
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Text(
                       '가격 : ${product['product_price']}원',
                       style: TextStyle(
