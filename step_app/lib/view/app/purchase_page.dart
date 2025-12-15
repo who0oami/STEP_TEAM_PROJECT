@@ -379,8 +379,8 @@ class _PurchasePageState extends State<PurchasePage> {
         ElevatedButton(
           onPressed: () => Get.back(),
           style: ElevatedButton.styleFrom(
-                backgroundColor: PColor.buttonPoint,
-                foregroundColor: PColor.buttonGray,
+                backgroundColor: PColor.buttonGray,
+                foregroundColor: PColor.buttonTextColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
