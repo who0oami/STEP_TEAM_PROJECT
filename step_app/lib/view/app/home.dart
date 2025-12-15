@@ -90,7 +90,7 @@ class _HomeState extends State<Home>
                     ),
                   ),
 
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
 
                   // 아이콘 (로그인)
                   IconButton(
@@ -106,12 +106,7 @@ class _HomeState extends State<Home>
             //  TabBar
             Container(
               height: 50,
-              color: const Color.fromARGB(
-                255,
-                255,
-                227,
-                145,
-              ),
+              color: Color.fromARGB(255, 255, 227, 145),
               child: TabBar(
                 controller: tabController,
                 labelColor: Colors.black,
