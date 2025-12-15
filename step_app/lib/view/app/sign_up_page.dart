@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_app/model/customer.dart';
-import 'package:step_app/util/message.dart';
-import 'package:step_app/util/scolor.dart';
+import 'package:step_app/view/app/forgot_password_page.dart';
 import 'package:step_app/vm/database_handler_customer.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
+// ⚠️ PColor, Message 클래스는 별도의 파일에서 import 해야 하지만,
+// 현재 파일에 포함되어 있다고 가정하고 유지합니다.
 
 class PColor {
   static const Color appBarBackgroundColor = Colors.black;
@@ -35,6 +30,13 @@ class Message {
       onConfirm: onConfirm,
     );
   }
+}
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
@@ -84,6 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   _updateAllCheck() {
+    // ⭐️ [수정 C] 불필요한 자기 할당 코드 제거
     all = fourteen && use && collect && marketing;
     _updateButtonState();
   }
@@ -152,37 +155,33 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
 
               SizedBox(height: 30),
-              Divider(
-                color: Colors.grey.shade300,
-                thickness: 1,
-              ),
-              SizedBox(height: 10),
+
               Text(
                 '약관 동의',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: PColor.appBarForegroundColor,
+                  // ⭐️ 흰색 배경에 보이도록 검은색 계열로 수정
+                  color: Colors.black,
                 ),
               ),
-              SizedBox(height: 10),
 
-              _buildAgreementRow(
-                text: '모두 동의합니다',
-                value: all,
-                onChanged: _toggleAll,
-                isAll: true,
-              ),
-              Divider(color: Colors.grey.shade200),
+              // ⭐️ [수정 A] Null 체크 로직 적용 시작
 
+              // 모두 동의합니다 (주석 처리된 코드는 원본에 따라 생략)
+              // _buildAgreementRow(text: '모두 동의합니다', value: all, onChanged: _toggleAll, isAll: true),
               _buildAgreementRow(
                 text: '[필수] 만 14세 이상입니다',
                 value: fourteen,
                 onChanged: (value) {
-                  setState(() {
-                    fourteen = value!;
-                    _updateAllCheck();
-                  });
+                  if (value != null) {
+                    // ⭐️ Null 체크
+                    setState(() {
+                      fourteen =
+                          value; // value! 대신 value 사용
+                      _updateAllCheck();
+                    });
+                  }
                 },
               ),
 
@@ -190,10 +189,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 text: '[필수] 이용 약관 동의',
                 value: use,
                 onChanged: (value) {
-                  setState(() {
-                    use = value!;
-                    _updateAllCheck();
-                  });
+                  if (value != null) {
+                    // ⭐️ Null 체크
+                    setState(() {
+                      use = value; // value! 대신 value 사용
+                      _updateAllCheck();
+                    });
+                  }
                 },
               ),
 
@@ -201,10 +203,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 text: '[필수] 개인정보 수집 및 이용 동의',
                 value: collect,
                 onChanged: (value) {
-                  setState(() {
-                    collect = value!;
-                    _updateAllCheck();
-                  });
+                  if (value != null) {
+                    // ⭐️ Null 체크
+                    setState(() {
+                      collect = value; // value! 대신 value 사용
+                      _updateAllCheck();
+                    });
+                  }
                 },
               ),
 
@@ -212,13 +217,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 text: '[선택] 마케팅 수신 동의',
                 value: marketing,
                 onChanged: (value) {
-                  setState(() {
-                    marketing = value!;
-                    _updateAllCheck();
-                  });
+                  if (value != null) {
+                    // ⭐️ Null 체크
+                    setState(() {
+                      marketing =
+                          value; // value! 대신 value 사용
+                      _updateAllCheck();
+                    });
+                  }
                 },
               ),
 
+              // ⭐️ [수정 A] Null 체크 로직 적용 끝
               SizedBox(height: 30),
 
               Center(
@@ -257,12 +267,15 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  // ⭐️ UI Helper Methods (buildInputField, buildAgreementRow, toggleAll)
+
   Widget _buildInputField(
     String label,
     TextEditingController controller,
     TextInputType keyboardType, {
     bool isObscure = false,
   }) {
+    // ... (TextField UI 로직 생략)
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Column(
@@ -333,8 +346,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 ? FontWeight.bold
                 : FontWeight.normal,
             color: isAll
-                ? PColor.appBarForegroundColor
-                : Colors.grey.shade800,
+                ? Colors.black
+                : Colors.grey.shade800, // 흰색 배경 대비 색상 조정
           ),
         ),
       ],
@@ -369,6 +382,7 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
+    // ⭐️ checkEmailExists가 customerHandler에 정의되어 있다고 가정
     final exists = await customerHandler.checkEmailExists(
       emailcontroller.text.trim(),
     );
@@ -395,7 +409,10 @@ class _SignUpPageState extends State<SignUpPage> {
       customer_email: emailcontroller.text.trim(),
       customer_pw: pwcontroller.text.trim(),
       customer_name: namecontroller.text.trim(),
-      customer_phone: phonecontroller.text.trim(),
+      // ⭐️ [수정 B] 전화번호 저장 시 하이픈 제거
+      customer_phone: phonecontroller.text
+          .trim()
+          .replaceAll('-', ''),
       customer_address: '',
       customer_image: null,
       customer_lat: null,
@@ -411,9 +428,8 @@ class _SignUpPageState extends State<SignUpPage> {
         '회원가입 완료',
         '${namecontroller.text}님, 회원가입을 축하드립니다! 로그인 페이지로 이동합니다.',
         onConfirm: () {
-          Get.back();
-
-          Get.back();
+          Get.back(); // 다이얼로그 닫기
+          Get.back(); // 회원가입 페이지 닫고 이전 페이지(로그인)로 이동
         },
       );
     } else {

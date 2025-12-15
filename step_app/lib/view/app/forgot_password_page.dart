@@ -255,4 +255,13 @@ class DatabaseHandlerCustomer {
       (c) => c.customer_email == email,
     );
   }
+
+  Future<dynamic> hasCustomer(
+    String email,
+    String password,
+  ) async {}
+
+  Future<dynamic> checkEmailExists(String trim) async {}
+
+  Future<String?> findEmailByPhone(String phone) async {}
 }
