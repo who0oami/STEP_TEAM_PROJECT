@@ -6,12 +6,10 @@ class EmployeeFindInfo extends StatefulWidget {
   const EmployeeFindInfo({super.key});
 
   @override
-  State<EmployeeFindInfo> createState() =>
-      _EmployeeFindInfoState();
+  State<EmployeeFindInfo> createState() => _EmployeeFindInfoState();
 }
 
-class _EmployeeFindInfoState
-    extends State<EmployeeFindInfo> {
+class _EmployeeFindInfoState extends State<EmployeeFindInfo> {
   late String emptyText;
   late String wrongText;
   late String? errorText;
@@ -35,12 +33,7 @@ class _EmployeeFindInfoState
     wrongText = '정보가 틀렸습니다.';
     errorText = null;
 
-    items = [
-      '@naver.com',
-      '@gmail.com',
-      '@kakao.com',
-      '직접 입력',
-    ];
+    items = ['@naver.com', '@gmail.com', '@kakao.com', '직접 입력'];
     dropDownValue = items[0];
   }
 
@@ -55,10 +48,7 @@ class _EmployeeFindInfoState
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1C1F26),
-              Color(0xFF2A2D36),
-            ],
+            colors: [Color(0xFF1C1F26), Color(0xFF2A2D36)],
           ),
         ),
         child: Row(
@@ -83,12 +73,7 @@ class _EmployeeFindInfoState
               child: Container(
                 padding: EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(
-                    255,
-                    243,
-                    243,
-                    243,
-                  ),
+                  color: Color.fromARGB(255, 243, 243, 243),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(0),
@@ -102,10 +87,8 @@ class _EmployeeFindInfoState
 
                     child: SingleChildScrollView(
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'STEP',
@@ -128,29 +111,19 @@ class _EmployeeFindInfoState
                           SizedBox(height: 25),
                           Text(
                             '사번과 이메일주소를 입력하세요',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(height: 12),
                           SizedBox(
                             width: 400,
                             child: TextField(
-                              controller:
-                                  employeeIdController,
+                              controller: employeeIdController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(
-                                        12,
-                                      ),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 labelText: '사번을 입력 하세요',
-                                labelStyle: TextStyle(
-                                  color: Color(
-                                    0xB81A1A1A,
-                                  ),
-                                ),
+                                labelStyle: TextStyle(color: Color(0xB81A1A1A)),
                               ),
                             ),
                           ),
@@ -162,20 +135,14 @@ class _EmployeeFindInfoState
                               Expanded(
                                 flex: 3,
                                 child: TextField(
-                                  controller:
-                                      emailIdController,
+                                  controller: emailIdController,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                            12,
-                                          ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     labelText: '메일 주소',
                                     labelStyle: TextStyle(
-                                      color: Color(
-                                        0xB81A1A1A,
-                                      ),
+                                      color: Color(0xB81A1A1A),
                                     ),
                                   ),
                                 ),
@@ -186,41 +153,27 @@ class _EmployeeFindInfoState
                               Expanded(
                                 flex: 2,
                                 child: DropdownButtonFormField<String>(
-                                  initialValue:
-                                      dropDownValue,
+                                  initialValue: dropDownValue,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                            12,
-                                          ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  items: items.map((
-                                    String item,
-                                  ) {
-                                    return DropdownMenuItem<
-                                      String
-                                    >(
+                                  items: items.map((String item) {
+                                    return DropdownMenuItem<String>(
                                       value: item,
                                       child: Text(item),
                                     );
                                   }).toList(),
                                   onChanged: (value) {
                                     setState(() {
-                                      dropDownValue =
-                                          value!;
-                                      isCustomEmail =
-                                          value ==
-                                          '직접 입력';
+                                      dropDownValue = value!;
+                                      isCustomEmail = value == '직접 입력';
 
                                       if (!isCustomEmail) {
-                                        emailDomainController
-                                                .text =
-                                            value;
+                                        emailDomainController.text = value;
                                       } else {
-                                        emailDomainController
-                                            .clear();
+                                        emailDomainController.clear();
                                       }
                                     });
                                   },
@@ -230,9 +183,7 @@ class _EmployeeFindInfoState
                           ),
                           if (errorText != null)
                             Padding(
-                              padding: EdgeInsets.only(
-                                top: 8,
-                              ),
+                              padding: EdgeInsets.only(top: 8),
                               child: Text(
                                 errorText!,
                                 style: TextStyle(
@@ -248,18 +199,12 @@ class _EmployeeFindInfoState
                             width: double.infinity,
                             height: 52,
                             child: ElevatedButton(
-                              onPressed:
-                                  checkEmployeeLogin,
+                              onPressed: checkEmployeeLogin,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    PColor.buttonPrimary,
-                                foregroundColor: PColor
-                                    .buttonTextColor,
+                                backgroundColor: PColor.buttonPrimary,
+                                foregroundColor: PColor.buttonTextColor,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(
-                                        12,
-                                      ),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               child: Text('비밀번호 찾기'),
@@ -294,7 +239,7 @@ class _EmployeeFindInfoState
     }
 
     // 2. 임시 검증
-    if (employeeIdController.text.trim() != 'root' ||
+    if (employeeIdController.text.trim() != '52091485' ||
         fullEmail != 'test@naver.com') {
       setState(() {
         errorText = wrongText;
@@ -311,12 +256,7 @@ class _EmployeeFindInfoState
       title: '알림',
       middleText: '입력하신 이메일로\n임시 비밀번호가 발송되었습니다.',
       barrierDismissible: false,
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text('확인'),
-        ),
-      ],
+      actions: [TextButton(onPressed: () => Get.back(), child: Text('확인'))],
     );
   }
 } // class
