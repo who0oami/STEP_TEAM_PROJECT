@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_app/util/scolor.dart';
 import 'package:step_app/view/web/employee_find_info.dart';
+import 'package:step_app/view/web/employee_tabbar.dart';
 import 'package:step_app/view/web/stock.dart';
 
 class EmployeeLogin extends StatefulWidget {
@@ -213,7 +214,7 @@ class _EmployeeLoginState extends State<EmployeeLogin> {
         TextButton(
           onPressed: () {
             Get.back();
-            // Get.to();
+            Get.to(EmployeeTabbar());
           },
           child: Text('OK'),
         ),

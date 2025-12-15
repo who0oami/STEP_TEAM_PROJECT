@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_app/view/app/sign_up_page.dart';
+import 'package:step_app/view/web/inventory_inbound.dart';
 import 'package:step_app/view/web/purchase_order.dart';
 import 'package:step_app/view/web/sales.dart';
 import 'package:step_app/view/web/sign.dart';
@@ -30,7 +31,7 @@ class _EmployeeTabbarState extends State<EmployeeTabbar> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 4, vsync: this);
+    controller = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -55,13 +56,13 @@ class _EmployeeTabbarState extends State<EmployeeTabbar> with SingleTickerProvid
                   onTap: () { controller.index = 0;}
                 ),
                  ListTile(
-                  title: const Text('매출 현황'),
+                  title: const Text('입고하기'),
                   onTap: () {
                     controller.index = 1; 
                   },
                  ),
                  ListTile(
-                  title: const Text('재고 현황'),
+                  title: const Text('매출 현황'),
                   onTap: () {
                     controller.index = 2; 
                   },
@@ -86,6 +87,7 @@ class _EmployeeTabbarState extends State<EmployeeTabbar> with SingleTickerProvid
               controller: controller,
               children: [
                 PurchaseOrder(), // 발주
+                InventoryInbound(), // 입고
                 Sales(), // 매출
                 Stock(), // 재고
                 Sign(orderData: [],), // 결재
