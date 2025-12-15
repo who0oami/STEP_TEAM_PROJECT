@@ -71,11 +71,11 @@ class _PurchasePageState extends State<PurchasePage> {
                         children: [
                           Text('지점'),
                           Text(
-                            '미지정',
-                            style: TextStyle(
-                              color: Colors.grey
-                            ),
-                            ),
+                          branchName.text.isEmpty ? '미지정' : branchName.text,
+                          style: TextStyle(
+                            color: branchName.text.isEmpty ? Colors.grey : Colors.black,
+                          ),
+                        ),
                         ],
                       ),
                       SizedBox(width: 20),
