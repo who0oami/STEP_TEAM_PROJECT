@@ -9,6 +9,7 @@ import 'package:step_app/util/message.dart';
 import 'package:step_app/util/scolor.dart';
 import 'package:step_app/view/app/edit_profile_page.dart';
 import 'package:step_app/view/app/order_history_page.dart';
+import 'package:step_app/model/purchase_list_item.dart';
 
 class ProfileViewPage extends StatefulWidget {
   final int? customerId;
@@ -104,7 +105,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                 ],
               ),
               SizedBox(height: 16),
-
               SizedBox(
                 width: double.infinity,
                 height: 44,
@@ -141,7 +141,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                   ),
                 ),
               ),
-
               SizedBox(height: 16),
               Expanded(child: PurchaseListSection()),
             ],
@@ -183,11 +182,12 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
   void initState() {
     super.initState();
 
-    // 더미. 내일 DB 붙이면 여기만 교체하면 됨
+    // 더미. images 폴더의 이미지 2개 사용
     _items = <PurchaseListItem>[
       PurchaseListItem(
         orderId: 1,
         imageBytes: Uint8List(0),
+        imageAssetPath: 'images/nike01.png', // ✅ 추가
         productName: '에어줌 페가수스',
         brandName: 'NIKE',
         branchName: '강남구 지점',
@@ -197,6 +197,7 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
       PurchaseListItem(
         orderId: 2,
         imageBytes: Uint8List(0),
+        imageAssetPath: 'images/new01.png', // ✅ 추가
         productName: '슈퍼스타',
         brandName: 'ADIDAS',
         branchName: '서초구 지점',
@@ -297,19 +298,27 @@ class _PurchaseListSectionState extends State<PurchaseListSection> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: item.imageBytes.isEmpty
-                  ? Container(
+              child: item.imageBytes.isNotEmpty
+                  ? Image.memory(
+                      item.imageBytes,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                    )
+                  : (item.imageAssetPath != null &&
+                        item.imageAssetPath!.isNotEmpty)
+                  ? Image.asset(
+                      item.imageAssetPath!,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
                       width: 72,
                       height: 72,
                       alignment: Alignment.center,
                       color: Color(0xFFEAEAEA),
                       child: Icon(Icons.image_not_supported),
-                    )
-                  : Image.memory(
-                      item.imageBytes,
-                      width: 72,
-                      height: 72,
-                      fit: BoxFit.cover,
                     ),
             ),
             SizedBox(width: 12),

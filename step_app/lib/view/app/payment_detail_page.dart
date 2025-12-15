@@ -9,6 +9,8 @@ class PaymentDetailPage extends StatefulWidget {
     required this.paymentNo,
     required this.orderNo,
     required this.imageBytes,
+    this.imageAssetPath, //
+    this.isPickedUp = false,
     required this.productTitle,
     required this.optionLine,
     required this.sizeLine,
@@ -21,6 +23,8 @@ class PaymentDetailPage extends StatefulWidget {
   final String orderNo;
   final Uint8List imageBytes;
 
+  final String? imageAssetPath; // ✅ 추가
+
   final String productTitle;
   final String optionLine;
   final String sizeLine;
@@ -28,6 +32,8 @@ class PaymentDetailPage extends StatefulWidget {
   final int initialAmountWon;
   final int totalProductWon;
   final String transactionAtText;
+
+  final bool isPickedUp;
 
   @override
   State<PaymentDetailPage> createState() => _PaymentDetailPageState();
@@ -59,7 +65,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -78,13 +83,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 ],
               ),
             ),
-
             Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -93,7 +96,8 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _thumb(w.imageBytes),
+                  // ✅ 여기 수정: bytes 없으면 assetPath로 표시
+                  _thumb(w.imageBytes, assetPath: w.imageAssetPath),
                   SizedBox(width: 12),
                   Expanded(
                     child: _productInfo(
@@ -129,13 +133,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 ],
               ),
             ),
-
             Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -163,13 +165,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 ],
               ),
             ),
-
             Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -180,13 +180,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 '${_won(w.totalProductWon)}원',
               ),
             ),
-
             Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -214,13 +212,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                 ],
               ),
             ),
-
             Divider(
               height: 1,
               thickness: 1,
               color: Color(0xFFE9E9E9),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -229,7 +225,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //  결제정보/카카오페이  정렬
                   Row(
                     children: [
                       Text(
@@ -270,22 +265,30 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     );
   }
 
-  Widget _thumb(Uint8List bytes) {
+  // ✅ 수정: bytes 없으면 assetPath로 표시 (디자인/크기 그대로)
+  Widget _thumb(Uint8List bytes, {String? assetPath}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
-      child: bytes.isEmpty
-          ? Container(
+      child: bytes.isNotEmpty
+          ? Image.memory(
+              bytes,
+              width: 64,
+              height: 64,
+              fit: BoxFit.cover,
+            )
+          : (assetPath != null && assetPath.isNotEmpty)
+          ? Image.asset(
+              assetPath,
+              width: 64,
+              height: 64,
+              fit: BoxFit.cover,
+            )
+          : Container(
               width: 64,
               height: 64,
               color: Color(0xFFEDEDED),
               alignment: Alignment.center,
               child: Icon(Icons.image_not_supported, size: 22),
-            )
-          : Image.memory(
-              bytes,
-              width: 64,
-              height: 64,
-              fit: BoxFit.cover,
             ),
     );
   }
