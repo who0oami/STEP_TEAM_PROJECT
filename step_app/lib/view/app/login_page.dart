@@ -8,8 +8,6 @@ import 'package:step_app/vm/database_handler_customer.dart';
 import 'package:step_app/vm/seeds/seed_customer.dart'
     hide SeedCustomer;
 
-// 🚨 주의: 이 PColor 클래스는 예시를 위해 임시로 정의한 것입니다.
-// 실제 프로젝트의 PColor 클래스로 대체하거나 필요한 색상으로 변경하세요.
 class PColor {
   static const Color buttonPrimary = Color(
     0xFF1E88E5,
