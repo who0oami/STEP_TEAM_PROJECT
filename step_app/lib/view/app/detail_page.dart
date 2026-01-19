@@ -1,27 +1,18 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:step_app/util/scolor.dart';
-
-// class PColor {
-//   static const Color appBarBackgroundColor = Colors.white;
-//   static const Color appBarForegroundColor = Colors.black;
-//   static const Color buttonPrimary = Colors.black;
-//   static const Color buttonTextColor = Colors.white;
-//   static const Color indicatorColor = Colors.black;
-// }
+import 'package:step_app/util/scolor.dart'; 
 
 class Product {
-  final int? product_id; // 제품 번호_자동 증가 Primary Key
-  // final String category_product_id; // 제품 카테고리 id
-  final String category_manufacturer_id; // 제조사 카테고리 id
-  final String category_product_size_id; // 사이즈 카테고리 id
-  final String category_color_id; // 색상 카테고리 id
-  final double product_price; // 제품 가격
-  final int product_quantity; // 제품 수량
-  final Uint8List product_image; // 제품 이미지
+  final int? product_id;
+  final String category_manufacturer_id;
+  final String category_product_size_id;
+  final String category_color_id;
+  final double product_price;
+  final int product_quantity;
+  final Uint8List product_image;
+
   Product({
     this.product_id,
-    // required this.category_product_id,
     required this.category_manufacturer_id,
     required this.category_product_size_id,
     required this.category_color_id,
@@ -38,8 +29,7 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage>
-    with SingleTickerProviderStateMixin {
+class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin {
   late TabController controller;
   late List<Product> productList;
   late Product selectedProduct;
@@ -51,54 +41,35 @@ class _DetailPageState extends State<DetailPage>
 
     productList = [
       Product(
-        product_id: 1,
-        // category_product_id: '001',
+        product_id: 10123,
         category_manufacturer_id: 'Nike',
         category_product_size_id: '270',
         category_color_id: 'Black',
-        product_price: 100.0,
+        product_price: 129000,
         product_quantity: 10,
         product_image: Uint8List.fromList([]),
       ),
       Product(
-        product_id: 2,
-        // category_product_id: '002',
+        product_id: 10124,
         category_manufacturer_id: 'Nike',
         category_product_size_id: '265',
-        category_color_id: 'Black',
-        product_price: 110.0,
-        product_quantity: 15,
-
+        category_color_id: 'Red',
+        product_price: 139000,
+        product_quantity: 5,
         product_image: Uint8List.fromList([]),
       ),
       Product(
-        product_id: 3,
-        // category_product_id: '003',
+        product_id: 10125,
         category_manufacturer_id: 'Nike',
         category_product_size_id: '280',
-        category_color_id: 'Black',
-        product_price: 120.0,
+        category_color_id: 'Grey',
+        product_price: 125000,
         product_quantity: 20,
-        product_image: Uint8List.fromList([]),
-      ),
-      Product(
-        product_id: 4,
-        // category_product_id: '004',
-        category_manufacturer_id: 'Nike',
-        category_product_size_id: '250',
-        category_color_id: 'Black',
-        product_price: 130.0,
-        product_quantity: 25,
         product_image: Uint8List.fromList([]),
       ),
     ];
 
     selectedProduct = productList.first;
-  }
-
-  void _selectProduct(Product product) {
-    selectedProduct = product;
-    setState(() {});
   }
 
   @override
@@ -107,203 +78,152 @@ class _DetailPageState extends State<DetailPage>
     super.dispose();
   }
 
+  void _selectProduct(Product product) {
+    setState(() {
+      selectedProduct = product;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    const double horizontalPadding = 16.0;
-
     return Scaffold(
       backgroundColor: PColor.baseBackgroundColor,
       appBar: AppBar(
         backgroundColor: PColor.appBarBackgroundColor,
         foregroundColor: PColor.appBarForegroundColor,
         elevation: 0,
-
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back),
-        ),
+        title: Text(selectedProduct.category_manufacturer_id),
         actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
           IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
           IconButton(icon: Icon(Icons.share_outlined), onPressed: () {}),
         ],
-
         bottom: TabBar(
           controller: controller,
-          labelColor: PColor.appBarForegroundColor,
           indicatorColor: PColor.buttonPrimary,
-          tabs: [
+          labelColor: PColor.appBarForegroundColor,
+          tabs: const [
             Tab(text: '상품'),
             Tab(text: '사이즈'),
             Tab(text: '상세'),
           ],
         ),
       ),
-
       body: Column(
         children: [
           Expanded(
             child: TabBarView(
               controller: controller,
               children: [
-                _buildProductTab(horizontalPadding),
-                Center(child: Text("사이즈 선택 화면")),
-                Center(child: Text("상세 정보 화면")),
+                _buildProductTab(),
+              Center(child: Text("사이즈 정보 테이블")),
+                 Center(child: Text("상세 설명 및 리뷰")),
               ],
             ),
           ),
-
-          Container(
-            padding: const EdgeInsets.all(horizontalPadding),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: PColor.buttonPrimary,
-                  foregroundColor: PColor.buttonTextColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  '구매하기',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomButton(),
         ],
       ),
     );
   }
 
-  Widget _buildProductTab(double padding) {
+  Widget _buildProductTab() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            // Center(
-            //   child: Image.asset(
-            //     selectedShoe.imageUrl,
-            //     height: 300,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
-            Center(
-              child: Container(
-                height: 300,
-                color: Colors.grey[300],
-                child: Center(
-                  child: Text(
-                    "상품 이미지 없음",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+    
+          Container(
+            height: 300,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(height: 20),
+            child:  Icon(Icons.image, size: 100, color: Colors.grey),
+          ),
+          SizedBox(height: 20),
+           Text("추천 옵션", style: TextStyle(fontWeight: FontWeight.bold)),
+           SizedBox(height: 10),
+          SizedBox(
+            height: 80,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: productList.length,
+              itemBuilder: (context, index) {
+                final product = productList[index];
+                bool isSelected = selectedProduct.product_id == product.product_id;
 
-            SizedBox(
-              height: 70,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: productList.length,
-                itemBuilder: (context, index) {
-                  final product = productList[index];
-                  return GestureDetector(
-                    onTap: () => _selectProduct(product),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: SizedBox(
-                        width: 70,
-                        height: 70,
-                        // decoration: BoxDecoration(
-                        //   color: Colors.grey[200],
-                        //   borderRadius: BorderRadius.circular(4),
-                        //   border: Border.all(
-                        //     color: selectedProduct == product
-                        //         ? product.category_color_id == 'Black'
-                        //               ? Colors.black
-                        //               : Colors.red
-                        //         : Colors.grey.shade300,
-                        //     width: selectedProduct == product ? 3 : 1,
-                        //   ),
-                        // ),
-                        child: Center(
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            // decoration: BoxDecoration(
-                            //   color: product.category_color_id == 'Black'
-                            //       ? Colors.black
-                            //       : Colors.red,
-                            //   shape: BoxShape.circle,
-                            // ),
-                          ),
-                        ),
+                return GestureDetector(
+                  onTap: () => _selectProduct(product),
+                  child: Container(
+                    width: 80,
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? PColor.buttonPrimary : Colors.transparent,
+                        width: 2,
+                      ),
+                      image: const DecorationImage(
+                        image: NetworkImage("https://via.placeholder.com/80"), 
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  );
-                },
+                  ),
+                );
+              },
+            ),
+          ),
+       SizedBox(height: 30),
+
+          Text(
+            selectedProduct.category_manufacturer_id,
+            style: const TextStyle(fontSize: 16, color: Colors.grey, decoration: TextDecoration.underline),
+          ),
+        SizedBox(height: 8),
+          Text(
+            "Air Max Pulse - ${selectedProduct.category_color_id} Edition",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+         SizedBox(height: 20),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+               Text("희망가", style: TextStyle(fontSize: 16)),
+              Text(
+                '${selectedProduct.product_price.toInt()}원',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-            ),
-
-            //SizedBox(height: 40),
-            Text(
-              '발매가 ${selectedProduct.product_price}원',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-
-            Text(
-              '${selectedProduct.product_price}원',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: 8),
-
-            Text(
-              selectedProduct.product_id.toString(),
-              style: const TextStyle(fontSize: 16, color: Colors.black54),
-            ),
-            SizedBox(height: 4),
-
-            // Text(
-            //   '{manufacturer_category}:{product_category},',
-            //   style: TextStyle(fontSize: 11, color: Colors.grey),
-            // ),
-            SizedBox(height: 40),
-          ],
-        ),
+            ],
+          ),
+          const Divider(height: 40),
+          Text("상품 코드: ${selectedProduct.product_id}"),
+          Text("선택 사이즈: ${selectedProduct.category_product_size_id} mm"),
+          Text("재고 수량: ${selectedProduct.product_quantity} 개"),
+        ],
       ),
     );
   }
 
-  /*
-Future insertAction() async {
-   Product product = Product(
-      category_product_id: '1',2
-      category_manufacturer_id: '1',
-      category_product_size_id: '1',
-      category_color_id: '1',
-      product_price: 10000.0,
-      product_quantity: 10,
-      product_image: Uint8List(0),
+  Widget _buildBottomButton() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2))],
+      ),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: PColor.buttonPrimary,
+          foregroundColor: PColor.buttonTextColor,
+          minimumSize: const Size(double.infinity, 55),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        child:  Text('구매하기', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
     );
-   */
-
-  /*
-//전체 상품 목록 조회   
-SELECT * FROM product
-//특정 상품 상세 조회   
-SELECT * FROM product 
-WHERE product_id = ?
-////장바구니 추가   
-///INSERT   INSERT INTO cart (customer_id, product_id, quantity)
-///VALUES (?, ?, ?)
-*/
+  }
 }
